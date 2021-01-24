@@ -14,7 +14,9 @@ echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/
 sudo apt-get update
 sudo apt-get install -y kubeadm
 # init kubernetes
-sudo kubeadm init
+# todo: add usage of arg --pod-network-cidr
+# ref: https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/
+sudo kubeadm init --pod-network-cidr 172.31.0.0/16
 # add user configurations for kubernetes
 mkdir -p ~/.kube
 sudo cp -i /etc/kubernetes/admin.conf ~/.kube/config
@@ -24,3 +26,10 @@ curl https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-
 kubectl apply -f kube-flannel.yml
 # allow pods to run on the master node (only node)
 kubectl taint nodes --all node-role.kubernetes.io/master-
+# method of starting a deployment for testing purposes
+# curl https://kubernetes.io/examples/controllers/nginx-deployment.yaml -o nginx-deployment.yml
+# kubectl apply -f nginx-deployment.yml
+# kubectl get deployments
+# kubectl describe deployment <deployment>
+# kubectl get pods
+# kubectl describe pod <pod>
