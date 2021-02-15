@@ -57,6 +57,9 @@ mkdir ${USER_HOME}/Workspace/
 cd ${USER_HOME}/Workspace
 git clone https://github.com/matthewjohnson42/personal-memex-server.git
 git clone https://github.com/matthewjohnson42/personal-memex-ui.git
+cd ${USER_HOME}/Workspace/personal-memex-ui
+npm install ng
+cd ${USER_HOME}/Workspace
 git clone https://github.com/matthewjohnson42/personal-memex-service.git
 echo
 echo "[INFO] setup of app sources complete"

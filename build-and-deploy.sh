@@ -11,16 +11,18 @@ export USER_HOME=$1
 
 sh ufw/ufw-allow-out.sh
 
-cd ${USER_HOME}/Workspace/personal-memex-service
+cd ${USER_HOME}/Workspace/personal-memex-service/docker
 git fetch origin # sudo to deal with issues locking git files on AWS
 git checkout origin/master
-sh ${USER_HOME}/Workspace/personal-memex-service/docker/docker-build.sh
+sh docker-build.sh
 
-cd ${USER_HOME}/Workspace/personal-memex-ui
+cd ${USER_HOME}/Workspace/personal-memex-ui/docker
 git fetch origin
 git checkout origin/master
-sh ${USER_HOME}/Workspace/personal-memex-ui/docker/docker-build.sh
+sh docker-build.sh
 
-sh kubernetes/kubernetes-deploy.sh
+cd ${USER_HOME}/Workspace/personal-memex-server/kubernetes
+sh kubernetes-deploy.sh
 
+cd ${USER_HOME}/Workspace/personal-memex-server
 sh ufw/ufw-deny-out.sh

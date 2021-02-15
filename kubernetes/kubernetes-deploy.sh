@@ -18,16 +18,16 @@ cat mongo/mongo-init.yml | sed "s/\${MONGO_IP}/${MONGO_IP}/g" | \
   sed "s/\${MONGO_DEFAULT_USER_PW}/${MONGO_DEFAULT_USER_PW}/g" > mongo/interpolated-mongo-init.yml
 cat elasticsearch/es-meta.yml | sed "s/\${ELASTICSEARCH_IP}/${ELASTICSEARCH_IP}/g" > elasticsearch/interpolated-es-meta.yml
 cat elasticsearch/es-deploy.yml | sed "s/\${ELASTICSEARCH_IP}/${ELASTICSEARCH_IP}/g" > elasticsearch/interpolated-es-deploy.yml
-cat app/app-meta.yml | sed "s/\${TOKEN_ENC_KEY_SECRET}/${TOKEN_ENC_KEY_SECRET}/g" | \
+cat service/service-meta.yml | sed "s/\${TOKEN_ENC_KEY_SECRET}/${TOKEN_ENC_KEY_SECRET}/g" | \
   sed "s/\${USERPASS_ENC_KEY_SECRET}/${USERPASS_ENC_KEY_SECRET}/g" | sed "s/\${MEMEX_IP}/${MEMEX_IP}/g" | \
-  sed "s/\${MONGO_IP}/${MONGO_IP}/g" | sed "s/\${ELASTICSEARCH_IP}/${ELASTICSEARCH_IP}/g" > app/interpolated-app-meta.yml
-cat app/app-deploy.yml | sed "s/\${TOKEN_ENC_KEY_SECRET}/${TOKEN_ENC_KEY_SECRET}/g" | \
+  sed "s/\${MONGO_IP}/${MONGO_IP}/g" | sed "s/\${ELASTICSEARCH_IP}/${ELASTICSEARCH_IP}/g" > service/interpolated-service-meta.yml
+cat service/service-deploy.yml | sed "s/\${TOKEN_ENC_KEY_SECRET}/${TOKEN_ENC_KEY_SECRET}/g" | \
   sed "s/\${USERPASS_ENC_KEY_SECRET}/${USERPASS_ENC_KEY_SECRET}/g" | sed "s/\${MEMEX_IP}/${MEMEX_IP}/g" | \
-  sed "s/\${MONGO_IP}/${MONGO_IP}/g" | sed "s/\${ELASTICSEARCH_IP}/${ELASTICSEARCH_IP}/g" > app/interpolated-app-deploy.yml
+  sed "s/\${MONGO_IP}/${MONGO_IP}/g" | sed "s/\${ELASTICSEARCH_IP}/${ELASTICSEARCH_IP}/g" > service/interpolated-service-deploy.yml
 
 kubectl apply -f mongo/interpolated-mongo-meta.yml
 kubectl apply -f elasticsearch/interpolated-es-meta.yml
-kubectl apply -f app/interpolated-app-meta.yml
+kubectl apply -f service/interpolated-service-meta.yml
 kubectl apply -f ui/ui-meta.yml
 
 kubectl apply -f elasticsearch/interpolated-es-deploy.yml
@@ -38,5 +38,5 @@ kubectl apply -f mongo/interpolated-mongo-init.yml
 
 sleep 10 # wait for elastic search to initialize
 
-kubectl apply -f app/interpolated-app-deploy.yml
+kubectl apply -f service/interpolated-service-deploy.yml
 kubectl apply -f ui/ui-deploy.yml

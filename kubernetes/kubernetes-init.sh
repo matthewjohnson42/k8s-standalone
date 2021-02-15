@@ -57,6 +57,8 @@ echo
 sudo -u ${USER_NAME} bash -c 'minikube config set driver docker'
 sudo -u ${USER_NAME} bash -c 'minikube start'
 sudo -u ${USER_NAME} bash -c 'minikube addons enable ingress'
+mkdir /root/.kube
+cp ${USER_HOME}/.kube/config /root/.kube/config
 echo
 echo "[INFO] kubernetes install complete"
 echo

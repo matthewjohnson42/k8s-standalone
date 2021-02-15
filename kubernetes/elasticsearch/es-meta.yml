@@ -43,14 +43,6 @@ spec:
   local:
     path: /data/es
   storageClassName: elasticsearch-sc
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: kubernetes.io/hostname
-              operator: In
-              values:
-                - master-kube-node
 
 ---
 
