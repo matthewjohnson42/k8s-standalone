@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: memex-elasticsearch
+  labels:
+    component: memex-elasticsearch
+spec:
+  selector:
+    matchLabels:
+      component: memex-elasticsearch
+  serviceName: elasticsearch-svc
+  template:
+    metadata:
+      labels:
+        component: memex-elasticsearch
+    spec:
+      containers:
+      - name: memex-elasticsearch
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+        ports:
+        - name: "9200-ss"
+          containerPort: 9200
+          hostPort: 9200
+        - name: "9300-ss"
+          containerPort: 9300
+          hostPort: 9300
+        env:
+        - name: "node.name"
+          value: "memex-es01"
+        - name: "cluster.name"
+          value: "memex-es-kube-cluster"
+        - name: "discovery.type"
+          value: "single-node"
+        - name: "bootstrap.memory_lock"
+          value: "true"
+        - name: "ES_JAVA_OPTS"
+          value: "-Xms512m -Xmx512m"
+        volumeMounts:
+          - mountPath: /usr/share/elasticsearch/data
+            name: elasticsearch-volume
+      volumes:
+      - name: elasticsearch-volume
+        persistentVolumeClaim:
+          claimName: elasticsearch-pvc

@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: memex-mongo
+  labels:
+    component: memex-mongo
+spec:
+  selector:
+    matchLabels:
+      component: memex-mongo
+  serviceName: mongo-svc
+  template:
+    metadata:
+      labels:
+        component: memex-mongo
+    spec:
+      containers:
+      - name: memex-mongo
+        image: memex-mongo:0.0.1
+        ports:
+        - containerPort: 27017
+          hostPort: 27017
+        volumeMounts:
+        - mountPath: /data/db
+          name: mongo-volume
+      volumes:
+      - name: mongo-volume
+        persistentVolumeClaim:
+          claimName: mongo-pvc

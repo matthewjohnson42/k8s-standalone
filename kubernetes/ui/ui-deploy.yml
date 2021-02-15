@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: memex-ui
+spec:
+  selector:
+    matchLabels:
+      component: memex-ui
+  serviceName: memex-ui
+  template:
+    metadata:
+      labels:
+        component: memex-ui
+    spec:
+      containers:
+        - name: memex-ui
+          image: memex-ui:0.0.1

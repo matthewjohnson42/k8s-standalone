@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: memex-mongo-sidecar
+spec:
+  template:
+    spec:
+      containers:
+        - name: memex-mongo-sidecar
+          image: memex-mongo:0.0.1
+          command: ["sh"]
+          args: ["/dbInit.sh"]
+          env:
+            - name: "MONGO_HOST"
+              value: "${MONGO_IP}"
+            - name: "MONGO_DEFAULT_USER_PW"
+              value: "${MONGO_DEFAULT_USER_PW}"
+      restartPolicy: Never

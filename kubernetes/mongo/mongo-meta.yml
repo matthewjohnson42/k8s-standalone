@@ -1,0 +1,65 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: mongo-sc
+  labels:
+    component: memex-mongo
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-svc
+  labels:
+    name: memex-mongo
+spec:
+  ports:
+    - port: 27017
+      targetPort: 27017
+  clusterIP: ${MONGO_IP}
+  selector:
+    component: memex-mongo
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mongo-pv
+  labels:
+    component: memex-mongo
+spec:
+  capacity:
+    storage: 4097M
+  accessModes: [ ReadWriteOnce ]
+  persistentVolumeReclaimPolicy: Retain
+  local:
+    path: /data/db
+  storageClassName: mongo-sc
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - master-kube-node
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongo-pvc
+  labels:
+    component: memex-mongo
+spec:
+  volumeName: mongo-pv
+  storageClassName: mongo-sc
+  accessModes: [ ReadWriteOnce ]
+  resources:
+    requests:
+      storage: 4097M
