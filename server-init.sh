@@ -1,4 +1,5 @@
 #! /bin/bash
+# todo: remove -x from scripts when scripts validated
 set -x
 
 # init script for server hosting matthewjohnson42/personal-memex-service and matthewjohnson42/personal-memex-ui
@@ -47,7 +48,7 @@ echo
 echo "[INFO] beginning setup of dev toolchain"
 echo
 apt-get update
-apt-get install -y npm maven
+apt-get install -y npm maven mongodb-clients
 echo
 echo "[INFO] dev toolchain setup complete"
 echo
@@ -56,16 +57,36 @@ echo
 mkdir ${USER_HOME}/Workspace/
 cd ${USER_HOME}/Workspace
 git clone https://github.com/matthewjohnson42/personal-memex-server.git
+git clone https://github.com/matthewjohnson42/personal-memex-service.git
 git clone https://github.com/matthewjohnson42/personal-memex-ui.git
 cd ${USER_HOME}/Workspace/personal-memex-ui
 npm install ng
-cd ${USER_HOME}/Workspace
-git clone https://github.com/matthewjohnson42/personal-memex-service.git
 echo
 echo "[INFO] setup of app sources complete"
 echo
 
+echo
+echo "[INFO] beginning configuration of firewall"
+echo
+sh ufw/ufw-init.sh
+echo
+echo "[INFO] configuration of firewall complete"
+echo
+
+echo
+echo "[INFO] starting setup of Kubernetes"
+echo
 cd ${USER_HOME}/Workspace/personal-memex-server
 sh kubernetes/kubernetes-init.sh ${USER_NAME} ${USER_HOME}
-sh ufw/ufw-init.sh ${USER_HOME}
-sh build-and-deploy.sh
+echo
+echo "[INFO] Kubernetes setup complete"
+echo
+
+echo
+echo "[INFO] starting deploy of application"
+echo
+cd ${USER_HOME}/Workspace/personal-memex-server
+sh build-and-deploy.sh ${USER_HOME}
+echo
+echo "[INFO] deploy of application complete"
+echo

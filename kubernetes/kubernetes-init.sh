@@ -44,7 +44,9 @@ echo
 echo
 echo "[INFO] starting install of kubernetes as minikube"
 echo
-# install minikube to enable kubernetes master (control plane) and slave (node) on a single host
+# install minikube to allow for kubernetes master (control plane) and slave (node) on a single host
+mkdir ${USER_HOME}/Downloads
+cd ${USER_HOME}/Downloads
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_latest_amd64.deb
 dpkg -i minikube_latest_amd64.deb
 # install kubectl
@@ -55,7 +57,7 @@ echo "[INFO] beginning configuration of minikube"
 echo
 # configure minikube
 sudo -u ${USER_NAME} bash -c 'minikube config set driver docker'
-sudo -u ${USER_NAME} bash -c 'minikube start'
+sudo -u ${USER_NAME} bash -c 'minikube start --force-systemd'
 sudo -u ${USER_NAME} bash -c 'minikube addons enable ingress'
 mkdir /root/.kube
 cp ${USER_HOME}/.kube/config /root/.kube/config

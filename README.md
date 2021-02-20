@@ -21,8 +21,3 @@ Note that the firewall is configured by the `ufw-init.sh` script. Outbound HTTP 
 Assumes that `server-init.sh` has been run on the system first.
 
 To renew the cert:
-
-
-### todos
-
-remove -x from scripts when scripts validated

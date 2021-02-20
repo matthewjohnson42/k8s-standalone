@@ -23,7 +23,7 @@ spec:
     - name: "9300-svc"
       port: 9300
       targetPort: 9300
-  clusterIP: ${ELASTICSEARCH_IP}
+  clusterIP: ${ELASTICSEARCH_HOST}
   selector:
     component: memex-elasticsearch
 
@@ -43,6 +43,14 @@ spec:
   local:
     path: /data/es
   storageClassName: elasticsearch-sc
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - minikube
 
 ---
 

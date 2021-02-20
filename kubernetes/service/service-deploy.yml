@@ -20,11 +20,11 @@ spec:
         image: memex-service:0.0.1
         env:
         - name: "MONGO_HOST"
-          value: "${MONGO_IP}"
+          value: "${MONGO_HOST}"
         - name: "MONGO_PORT"
           value: "27017"
         - name: "ELASTICSEARCH_HOST"
-          value: "${ELASTICSEARCH_IP}"
+          value: "${ELASTICSEARCH_HOST}"
         - name: "ELASTICSEARCH_PORT"
           value: "9200"
         - name: "TOKEN_ENC_KEY_SECRET"

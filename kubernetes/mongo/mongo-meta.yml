@@ -19,7 +19,7 @@ spec:
   ports:
     - port: 27017
       targetPort: 27017
-  clusterIP: ${MONGO_IP}
+  clusterIP: ${MONGO_HOST}
   selector:
     component: memex-mongo
 
@@ -39,6 +39,14 @@ spec:
   local:
     path: /data/db
   storageClassName: mongo-sc
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - minikube
 
 ---
 
