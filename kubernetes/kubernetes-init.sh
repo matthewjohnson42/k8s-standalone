@@ -36,7 +36,7 @@ systemctl start docker
 prevGroups=$(groups ${USER_NAME} | sed 's/^[A-z0-9_-]*\$\s*:\s*//')
 usermod -g docker ${USER_NAME}
 for group in ${prevGroups}; do
-  useradd ${group} ${USER_NAME}
+  usermod -G ${group} ${USER_NAME}
 done
 usermod -G docker ${USER}
 echo
