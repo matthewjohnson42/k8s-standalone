@@ -60,7 +60,7 @@ echo
 # configure minikube
 sudo -u ${USER_NAME} -g docker bash -c ' \
 minikube config set driver docker; \
-minikube start --force-systemd; \
+minikube start --force-systemd --memory 3g ; \
 minikube addons enable ingress;'
 mkdir /root/.kube
 cp ${USER_HOME}/.kube/config /root/.kube/config
