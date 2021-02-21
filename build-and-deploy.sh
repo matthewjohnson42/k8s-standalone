@@ -33,6 +33,7 @@ echo "USERPASS_ENC_KEY_SECRET=${USERPASS_ENC_KEY_SECRET}" >> "${USER_HOME}/deplo
 echo
 echo "[INFO] beginning build of docker containers for service and UI"
 echo
+minikube docker-env
 cd ${USER_HOME}/Workspace/personal-memex-service/docker
 git fetch origin # sudo to deal with issues locking git files on AWS
 git checkout origin/master

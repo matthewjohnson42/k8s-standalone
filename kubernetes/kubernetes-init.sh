@@ -11,7 +11,6 @@ set -x
 USER_NAME=$1
 USER_HOME=$2
 
-
 echo
 echo "[INFO] starting install of docker"
 echo
@@ -44,7 +43,6 @@ echo
 echo "[INFO] docker install complete"
 echo
 
-
 echo
 echo "[INFO] starting install of kubernetes as minikube"
 echo
@@ -60,9 +58,10 @@ echo
 echo "[INFO] beginning configuration of minikube"
 echo
 # configure minikube
-sudo -u ${USER_NAME} bash -c 'minikube config set driver docker'
-sudo -u ${USER_NAME} bash -c 'minikube start --force-systemd'
-sudo -u ${USER_NAME} bash -c 'minikube addons enable ingress'
+sudo -u ${USER_NAME} -g docker bash -c ' \
+minikube config set driver docker; \
+minikube start --force-systemd; \
+minikube addons enable ingress;'
 mkdir /root/.kube
 cp ${USER_HOME}/.kube/config /root/.kube/config
 echo
