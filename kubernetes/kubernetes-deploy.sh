@@ -41,8 +41,8 @@ kubectl apply -f ui/ui-meta.yml
 echo
 echo "[INFO] beginning deploy of mongo and elasticsearch"
 echo
-kubectl apply -f elasticsearch/interpolated-es-deploy.yml
-kubectl apply -f mongo/interpolated-mongo-deploy.yml
+kubectl apply -f elasticsearch/es-deploy.yml
+kubectl apply -f mongo/mongo-deploy.yml
 kubectl rollout status -w statefulset/memex-elasticsearch
 kubectl rollout status -w statefulset/memex-mongo
 echo

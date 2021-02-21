@@ -36,7 +36,7 @@ spec:
     storage: 4097M
   accessModes: [ ReadWriteOnce ]
   persistentVolumeReclaimPolicy: Retain
-  local:
+  hostPath:
     path: /data/db
   storageClassName: mongo-sc
   nodeAffinity:

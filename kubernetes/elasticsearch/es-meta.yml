@@ -40,7 +40,7 @@ spec:
     storage: 4097M
   accessModes: [ ReadWriteOnce ]
   persistentVolumeReclaimPolicy: Retain
-  local:
+  hostPath:
     path: /data/es
   storageClassName: elasticsearch-sc
   nodeAffinity:
