@@ -34,7 +34,11 @@ systemctl stop docker
 systemctl start docker
 # add user to the docker user group.
 # allows access to the docker daemon via docker unix socket, accessed by the `docker` cmd line util.
-usermod -G docker ${USER_NAME}
+prevGroups=$(groups ${USER_NAME} | sed 's/^[A-z0-9_-]*\$\s*:\s*//')
+usermod -g docker ${USER_NAME}
+for group in ${prevGroups}; do
+  useradd ${group} ${USER_NAME}
+done
 usermod -G docker ${USER}
 echo
 echo "[INFO] docker install complete"
