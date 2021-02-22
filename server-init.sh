@@ -40,7 +40,6 @@ mkdir /data/db
 mkdir /data/es
 mount /dev/${DISK_NAME}1 /data/db
 mount /dev/${DISK_NAME}2 /data/es
-sudo
 chmod -R a+rw /data
 echo "[INFO] disk configuration complete"
 echo

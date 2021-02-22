@@ -1,14 +1,3 @@
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: elasticsearch-sc
-  labels:
-    component: memex-elasticsearch
-provisioner: kubernetes.io/no-provisioner
-volumeBindingMode: WaitForFirstConsumer
-
----
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -42,7 +31,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   hostPath:
     path: /data/es
-  storageClassName: elasticsearch-sc
+  storageClassName: microk8s-hostpath
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -62,7 +51,7 @@ metadata:
     component: memex-elasticsearch
 spec:
   volumeName: elasticsearch-pv
-  storageClassName: elasticsearch-sc
+  storageClassName: microk8s-hostpath
   accessModes: [ ReadWriteOnce ]
   resources:
     requests:

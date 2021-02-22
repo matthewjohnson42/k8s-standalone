@@ -1,14 +1,3 @@
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: mongo-sc
-  labels:
-    component: memex-mongo
-provisioner: kubernetes.io/no-provisioner
-volumeBindingMode: WaitForFirstConsumer
-
----
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -38,7 +27,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   hostPath:
     path: /data/db
-  storageClassName: mongo-sc
+  storageClassName: microk8s-hostpath
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -58,7 +47,7 @@ metadata:
     component: memex-mongo
 spec:
   volumeName: mongo-pv
-  storageClassName: mongo-sc
+  storageClassName: microk8s-hostpath
   accessModes: [ ReadWriteOnce ]
   resources:
     requests:
