@@ -47,8 +47,14 @@ echo
 echo
 echo "[INFO] beginning setup of dev toolchain"
 echo
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
 apt-get update
-apt-get install -y npm maven mongodb-clients docker.io
+# docker 19.0.13 depends on containerd 1.3.7, consistent with microk8s 1.20
+apt-get install -y npm maven mongodb-clients docker-ce=5:19.03.13~3-0~ubuntu-focal
 # set docker daemon to start on boot, restart daemon to load config. note docker configs exist in kubernetes-init.sh
 systemctl enable docker
 # add user to the docker user group.

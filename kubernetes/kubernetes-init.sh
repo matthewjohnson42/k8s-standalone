@@ -19,7 +19,7 @@ _EOF
 mv ${USER_HOME}/daemon.json /etc/docker/daemon.json
 systemctl restart docker
 # install microk8s to allow for kubernetes master (control plane) and slave (node) on a single host
-snap install --classic microk8s
+snap install --classic --channel=1.20/stable microk8s
 sudo usermod -a -G microk8s ubuntu
 echo
 echo "[INFO] beginning configuration of minikube"
