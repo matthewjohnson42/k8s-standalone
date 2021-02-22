@@ -7,7 +7,8 @@ set -x
 # usage: as default user, `sudo sh build-and-deploy.sh ${HOME}`
 # usage: as root (IE, using sudo), `sh build-and-deploy.sh <default-user-home-directory>`
 
-export USER_HOME=$1
+export UESR=$1
+export USER_HOME=$2
 
 echo
 echo "[INFO] allowing outbound HTTPS"
@@ -33,14 +34,14 @@ echo "USERPASS_ENC_KEY_SECRET=${USERPASS_ENC_KEY_SECRET}" >> "${USER_HOME}/deplo
 echo
 echo "[INFO] beginning build of docker containers for service and UI"
 echo
-eval $(minikube -p minikube docker-env)
+eval $(sudo -u ${USER_NAME} -g docker bash -c 'minikube -p minikube docker-env')
 cd ${USER_HOME}/Workspace/personal-memex-service
 git fetch origin # sudo to deal with issues locking git files on AWS
 git checkout origin/master
 # copy of content from docker/docker-compose-up.sh
 # content here references docker internal to minikube, allowing for minikube to reference the built images
 docker build --tag memex-mongo:0.0.1 --file docker/mongo/Dockerfile .
-mvn clean install -f ../app/pom.xml
+mvn clean install -f app/pom.xml
 docker build --tag memex-service:0.0.1 --file docker/app/Dockerfile .
 cd ${USER_HOME}/Workspace/personal-memex-ui
 git fetch origin

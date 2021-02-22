@@ -40,6 +40,7 @@ mkdir /data/db
 mkdir /data/es
 mount /dev/${DISK_NAME}1 /data/db
 mount /dev/${DISK_NAME}2 /data/es
+sudo
 chmod -R a+rw /data
 echo "[INFO] disk configuration complete"
 echo
@@ -86,7 +87,7 @@ echo
 echo "[INFO] starting deploy of application"
 echo
 cd ${USER_HOME}/Workspace/personal-memex-server
-sh build-and-deploy.sh ${USER_HOME}
+sh build-and-deploy.sh ${USER_NAME} ${USER_HOME}
 echo
 echo "[INFO] deploy of application complete"
 echo
