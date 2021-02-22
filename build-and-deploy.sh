@@ -34,15 +34,16 @@ echo "USERPASS_ENC_KEY_SECRET=${USERPASS_ENC_KEY_SECRET}" >> "${USER_HOME}/deplo
 echo
 echo "[INFO] beginning build of docker containers for service and UI"
 echo
-eval $(sudo -u ${USER_NAME} -g docker bash -c 'minikube -p minikube docker-env')
 cd ${USER_HOME}/Workspace/personal-memex-service
 git fetch origin # sudo to deal with issues locking git files on AWS
 git checkout origin/master
 # copy of content from docker/docker-compose-up.sh
 # content here references docker internal to minikube, allowing for minikube to reference the built images
-docker build --tag memex-mongo:0.0.1 --file docker/mongo/Dockerfile .
+docker build --tag localhost:32000/memex-mongo:0.0.1 --file docker/mongo/Dockerfile .
+docker push localhost:32000/memex-mongo:0.0.1
 mvn clean install -f app/pom.xml
-docker build --tag memex-service:0.0.1 --file docker/app/Dockerfile .
+docker build --tag localhost:32000/memex-service:0.0.1 --file docker/app/Dockerfile .
+docker push localhost:32000/memex-service:0.0.1
 cd ${USER_HOME}/Workspace/personal-memex-ui
 git fetch origin
 git checkout origin/master
@@ -50,7 +51,9 @@ git checkout origin/master
 # content here references docker internal to minikube, allowing for minikube to reference the built images
 npm install
 npm run ng -- build
-sudo docker build --tag memex-ui:0.0.1 -f docker/Dockerfile .
+docker build --tag localhost:32000/memex-ui:0.0.1 -f docker/Dockerfile .
+docker push localhost:32000/memex-ui:0.0.1
+
 echo
 echo "[INFO] build of docker containers complete"
 echo

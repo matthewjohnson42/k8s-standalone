@@ -50,7 +50,7 @@ echo "[INFO] beginning setup of dev toolchain"
 echo
 apt-get update
 apt-get install -y npm maven mongodb-clients docker.io
-# set docker daemon to start on boot, restart daemon to load config
+# set docker daemon to start on boot, restart daemon to load config. note docker configs exist in kubernetes-init.sh
 systemctl enable docker
 # add user to the docker user group.
 # allows access to the docker daemon via docker unix socket, accessed by the `docker` cmd line util.
@@ -88,7 +88,7 @@ echo
 echo "[INFO] starting setup of Kubernetes"
 echo
 cd ${USER_HOME}/Workspace/personal-memex-server
-sh kubernetes/kubernetes-init.sh ${USER_NAME} ${USER_HOME}
+sh kubernetes/kubernetes-init.sh ${USER_HOME}
 echo
 echo "[INFO] Kubernetes setup complete"
 echo
