@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: memex-service
-        image: memex-service:0.0.1
+        image: localhost:32000/memex-service:0.0.1
         env:
         - name: "MONGO_HOST"
           value: "${MONGO_HOST}"
