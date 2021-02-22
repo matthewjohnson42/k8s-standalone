@@ -78,6 +78,7 @@ echo
 echo
 echo "[INFO] beginning configuration of firewall"
 echo
+cd ${USER_HOME}/Workspace/personal-memex-server
 sh ufw/ufw-init.sh
 echo
 echo "[INFO] configuration of firewall complete"

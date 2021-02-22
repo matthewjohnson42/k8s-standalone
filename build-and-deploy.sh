@@ -16,9 +16,9 @@ echo
 cd ${USER_HOME}/Workspace/personal-memex-server
 sh ufw/ufw-allow-out.sh
 
-read -p "Enter kubernetes cluster IP for elasticsearch (from service-cidr, default 10.96.0.0/12): " ELASTICSEARCH_HOST
-read -p "Enter kubernetes cluster IP for mongo (from service-cidr, default 10.96.0.0/12): " MONGO_HOST
-read -p "Enter kubernetes cluster IP for the memex-app (from service-cidr, default 10.96.0.0/12): " MEMEX_HOST
+read -p "Enter kubernetes cluster IP for elasticsearch (from service-cidr, default 10.152.183.0/24 on microk8s): " ELASTICSEARCH_HOST
+read -p "Enter kubernetes cluster IP for mongo (from service-cidr, default 10.152.183.0/24 on microk8s): " MONGO_HOST
+read -p "Enter kubernetes cluster IP for the memex-app (from service-cidr, default 10.152.183.0/24 on microk8s): " MEMEX_HOST
 read -p "Enter default user password for mongo: " MONGO_DEFAULT_USER_PW
 read -p "Enter encryption key secret for JWT encryption: " TOKEN_ENC_KEY_SECRET
 read -p "Enter encryption key secret for encryption of users' passwords: " USERPASS_ENC_KEY_SECRET
