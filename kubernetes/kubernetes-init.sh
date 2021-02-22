@@ -1,69 +1,21 @@
 #!/bin/bash
 set -x
 
-# installs the application container runtime (docker) and container orchestration system (kubernetes)
+# installs the container orchestration system (kubernetes on containerd)
 # invoked from server-init.sh
 
-# note: requires root user permissions
-# usage: as default user, `sh kubernetes-init.sh ${USER} ${HOME}`
-# usage: as root (IE, using sudo), `sh build-and-deploy.sh <default-user-home-directory>`
-
-USER_NAME=$1
-USER_HOME=$2
-
 echo
-echo "[INFO] starting install of docker"
+echo "[INFO] starting install of kubernetes as microk8s"
 echo
-# install docker
-apt-get update
-apt-get install -y docker.io
-echo
-echo "[INFO] beginning configuration of docker"
-echo
-# configure docker to use systemd for userspace provisioning; limits performance impact
-cat << _EOF > ${USER_HOME}/daemon.json
-{
-"exec-opts": ["native.cgroupdriver=systemd"]
-}
-_EOF
-mv ${USER_HOME}/daemon.json /etc/docker/daemon.json
-# set docker daemon to start on boot, restart daemon to load config
-systemctl enable docker
-systemctl stop docker
-systemctl start docker
-# add user to the docker user group.
-# allows access to the docker daemon via docker unix socket, accessed by the `docker` cmd line util.
-prevGroups=$(groups ${USER_NAME} | sed 's/^[A-z0-9_-]*\$\s*:\s*//')
-usermod -g docker ${USER_NAME}
-for group in ${prevGroups}; do
-  usermod -G ${group} ${USER_NAME}
-done
-usermod -G docker ${USER}
-echo
-echo "[INFO] docker install complete"
-echo
-
-echo
-echo "[INFO] starting install of kubernetes as minikube"
-echo
-# install minikube to allow for kubernetes master (control plane) and slave (node) on a single host
-mkdir ${USER_HOME}/Downloads
-cd ${USER_HOME}/Downloads
-curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_latest_amd64.deb
-dpkg -i minikube_latest_amd64.deb
-# install kubectl
-# possibly uncoupled with minikube's kubernetes install version
-snap install kubectl --classic
+# install microk8s to allow for kubernetes master (control plane) and slave (node) on a single host
+snap install --classic microk8s
+sudo usermod -a -G microk8s ubuntu
+newgrp microk8s
 echo
 echo "[INFO] beginning configuration of minikube"
 echo
-# configure minikube
-sudo -u ${USER_NAME} -g docker bash -c ' \
-minikube config set driver docker; \
-minikube start --force-systemd --memory 3g --mount --mount-string /data:/data ; \
-minikube addons enable ingress;'
-mkdir /root/.kube
-cp ${USER_HOME}/.kube/config /root/.kube/config
+# configure microk8s
+microk8s enable dns registry storage ingress
 echo
 echo "[INFO] kubernetes install complete"
 echo

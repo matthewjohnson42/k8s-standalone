@@ -49,7 +49,17 @@ echo
 echo "[INFO] beginning setup of dev toolchain"
 echo
 apt-get update
-apt-get install -y npm maven mongodb-clients
+apt-get install -y npm maven mongodb-clients docker.io
+# set docker daemon to start on boot, restart daemon to load config
+systemctl enable docker
+# add user to the docker user group.
+# allows access to the docker daemon via docker unix socket, accessed by the `docker` cmd line util.
+prevGroups=$(groups ${USER_NAME} | sed 's/^[A-z0-9_-]*\$\s*:\s*//')
+usermod -g docker ${USER_NAME}
+for group in ${prevGroups}; do
+  usermod -G ${group} ${USER_NAME}
+done
+usermod -G docker ${USER}
 echo
 echo "[INFO] dev toolchain setup complete"
 echo
