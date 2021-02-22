@@ -41,6 +41,7 @@ mkdir /data/es
 mount /dev/${DISK_NAME}1 /data/db
 mount /dev/${DISK_NAME}2 /data/es
 chmod -R a+rw /data
+chown -R root:root /data
 echo "[INFO] disk configuration complete"
 echo
 
@@ -94,7 +95,7 @@ echo
 echo "[INFO] starting setup of Kubernetes"
 echo
 cd ${USER_HOME}/Workspace/personal-memex-server
-sh kubernetes/kubernetes-init.sh ${USER_HOME}
+sh kubernetes/kubernetes-init.sh ${USER_NAME} ${USER_HOME}
 echo
 echo "[INFO] Kubernetes setup complete"
 echo
@@ -103,7 +104,7 @@ echo
 echo "[INFO] starting deploy of application"
 echo
 cd ${USER_HOME}/Workspace/personal-memex-server
-sh build-and-deploy.sh ${USER_NAME} ${USER_HOME}
+sh build-and-deploy.sh ${USER_HOME}
 echo
 echo "[INFO] deploy of application complete"
 echo

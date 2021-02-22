@@ -7,8 +7,7 @@ set -x
 # usage: as default user, `sudo sh build-and-deploy.sh ${HOME}`
 # usage: as root (IE, using sudo), `sh build-and-deploy.sh <default-user-home-directory>`
 
-export UESR=$1
-export USER_HOME=$2
+export USER_HOME=$1
 
 echo
 echo "[INFO] allowing outbound HTTPS"
