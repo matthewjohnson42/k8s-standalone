@@ -11,13 +11,13 @@ echo "[INFO] starting install of kubernetes as microk8s"
 echo
 # install microk8s to allow for kubernetes master (control plane) and slave (node) on a single host
 # microk8s=1.20 has same transitive dependency, containerd=1.3.7, as docker=19.0.13
-snap install --classic --channel=1.20/stable microk8s
-sudo usermod -a -G microk8s ubuntu
+sudo -u ubuntu -g docker bash -c 'snap install --classic --channel=1.20/stable microk8s'
+usermod -a -G microk8s ubuntu
 echo
 echo "[INFO] beginning configuration of minikube"
 echo
 # configure microk8s
-microk8s enable dns registry storage ingress
+sudo -u ubuntu -g docker bash -c 'microk8s enable dns registry storage ingress'
 cat << _EOF > ${USER_HOME}/daemon.json
 {
   "insecure-registries" : ["localhost:32000"]
