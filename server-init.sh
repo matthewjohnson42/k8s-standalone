@@ -83,21 +83,21 @@ echo "[INFO] setup of app sources complete"
 echo
 
 echo
-echo "[INFO] beginning configuration of firewall"
-echo
-cd ${USER_HOME}/Workspace/personal-memex-server
-sh ufw/ufw-init.sh
-echo
-echo "[INFO] configuration of firewall complete"
-echo
-
-echo
 echo "[INFO] starting setup of Kubernetes"
 echo
 cd ${USER_HOME}/Workspace/personal-memex-server
 sh kubernetes/kubernetes-init.sh ${USER_NAME} ${USER_HOME}
 echo
 echo "[INFO] Kubernetes setup complete"
+echo
+
+echo
+echo "[INFO] beginning configuration of firewall"
+echo
+cd ${USER_HOME}/Workspace/personal-memex-server
+sh ufw/ufw-init.sh
+echo
+echo "[INFO] configuration of firewall complete"
 echo
 
 echo
