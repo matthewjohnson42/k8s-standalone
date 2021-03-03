@@ -18,7 +18,7 @@ echo
 echo "[INFO] beginning configuration of minikube"
 echo
 # configure microk8s
-sudo -u ${USER_NAME} -g docker bash -c 'microk8s enable dns registry storage ingress'
+sudo -u ${USER_NAME} -g docker bash -c 'microk8s enable dns registry storage ingress linkerd'
 cat << _EOF > ${USER_HOME}/daemon.json
 {
   "insecure-registries" : ["localhost:32000"]
