@@ -18,16 +18,7 @@ echo
 echo "[INFO] beginning configuration of microk8s"
 echo
 # configure microk8s
-sudo -u ${USER_NAME} -g docker bash -c 'microk8s enable dns registry storage ingress'
-# install linkerd
-INSTALL_DIR="${USER_HOME}/.linkerd2/bin"
-mkdir -p ${USER_HOME}/.linkerd2/bin
-curl https://github.com/linkerd/linkerd2/releases/download/stable-2.9.4/linkerd2-cli-stable-2.9.4-linux-amd64 \
-  -o "${INSTALL_DIR}/linkerd-stable-2.9.4"
-ln -s ${INSTALL_DIR}/linkerd-stable-2.9.4 ${INSTALL_DIR}/linkerd
-chmod +x ${INSTALL_DIR}/linkerd
-linkerd install-cni >> "${USER_HOME}/.linkerd/linkerd-cni-meta.yml"
-sudo -u ${USER_NAME} -g docker bash -c 'microk8s kubectl apply -f ${USER_HOME}/.linkerd/linkerd-cni-meta.yml'
+sudo -u ${USER_NAME} -g docker bash -c 'microk8s enable dns registry storage ingress linkerd'
 # trust the microk8s docker repository on localhost
 cat << _EOF > ${USER_HOME}/daemon.json
 {
@@ -36,6 +27,11 @@ cat << _EOF > ${USER_HOME}/daemon.json
 _EOF
 mv ${USER_HOME}/daemon.json /etc/docker/daemon.json
 systemctl restart docker
+COUNT=0
+while [ ${COUNT} -lt ${#USER_GROUPS[@]} ]; do
+  GROUPS_STRING="${GROUPS_STRING} -G ${USER_GROUPS[${COUNT}]}"
+  COUNT=$((${COUNT}+1))
+done
 echo
 echo "[INFO] kubernetes install complete"
 echo
