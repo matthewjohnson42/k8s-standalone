@@ -15,10 +15,20 @@ echo
 sudo -u ${USER_NAME} -g docker bash -c 'sudo snap install --classic --channel=1.20/stable microk8s'
 usermod -G microk8s ${USER_NAME}
 echo
-echo "[INFO] beginning configuration of minikube"
+echo "[INFO] beginning configuration of microk8s"
 echo
 # configure microk8s
-sudo -u ${USER_NAME} -g docker bash -c 'microk8s enable dns registry storage ingress linkerd'
+sudo -u ${USER_NAME} -g docker bash -c 'microk8s enable dns registry storage ingress'
+# install linkerd
+INSTALL_DIR="${USER_HOME}/.linkerd2/bin"
+mkdir -p ${USER_HOME}/.linkerd2/bin
+curl https://github.com/linkerd/linkerd2/releases/download/stable-2.9.4/linkerd2-cli-stable-2.9.4-linux-amd64 \
+  -o "${INSTALL_DIR}/linkerd-stable-2.9.4"
+ln -s ${INSTALL_DIR}/linkerd-stable-2.9.4 ${INSTALL_DIR}/linkerd
+chmod +x ${INSTALL_DIR}/linkerd
+linkerd install-cni >> "${USER_HOME}/.linkerd/linkerd-cni-meta.yml"
+sudo -u ${USER_NAME} -g docker bash -c 'microk8s kubectl apply -f ${USER_HOME}/.linkerd/linkerd-cni-meta.yml'
+# trust the microk8s docker repository on localhost
 cat << _EOF > ${USER_HOME}/daemon.json
 {
   "insecure-registries" : ["localhost:32000"]
