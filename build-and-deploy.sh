@@ -18,6 +18,7 @@ sh ufw/ufw-allow-out.sh
 read -p "Enter kubernetes cluster IP for elasticsearch (from service-cidr, default 10.152.183.0/24 on microk8s): " ELASTICSEARCH_HOST
 read -p "Enter kubernetes cluster IP for mongo (from service-cidr, default 10.152.183.0/24 on microk8s): " MONGO_HOST
 read -p "Enter kubernetes cluster IP for the memex-app (from service-cidr, default 10.152.183.0/24 on microk8s): " MEMEX_HOST
+read -p "Enter kubernetes cluster IP for the memex-ui (from service-cidr, default 10.152.183.0/24 on microk8s): " UI_HOST
 read -p "Enter default user password for mongo: " MONGO_DEFAULT_USER_PW
 read -p "Enter encryption key secret for JWT encryption: " TOKEN_ENC_KEY_SECRET
 read -p "Enter encryption key secret for encryption of users' passwords: " USERPASS_ENC_KEY_SECRET
@@ -26,6 +27,7 @@ rm "${USER_HOME}/deploy_env_vars"
 echo "ELASTICSEARCH_HOST=${ELASTICSEARCH_HOST}" >> "${USER_HOME}/deploy_env_vars"
 echo "MONGO_HOST=${MONGO_HOST}" >> "${USER_HOME}/deploy_env_vars"
 echo "MEMEX_HOST=${MEMEX_HOST}" >> "${USER_HOME}/deploy_env_vars"
+echo "UI_HOST=${UI_HOST}" >> "${USER_HOME}/deploy_env_vars"
 echo "MONGO_DEFAULT_USER_PW=${MONGO_DEFAULT_USER_PW}" >> "${USER_HOME}/deploy_env_vars"
 echo "TOKEN_ENC_KEY_SECRET=${TOKEN_ENC_KEY_SECRET}" >> "${USER_HOME}/deploy_env_vars"
 echo "USERPASS_ENC_KEY_SECRET=${USERPASS_ENC_KEY_SECRET}" >> "${USER_HOME}/deploy_env_vars"
@@ -48,6 +50,8 @@ git fetch origin
 git checkout origin/master
 # copy of content from docker/docker-compose-up.sh
 # content here references docker internal to minikube, allowing for minikube to reference the built images
+mv src/assets/config.json src/assets/config.json.bak
+mv src/assets/prod.json src/assets/config.json
 npm install
 npm run ng -- build
 docker build --tag localhost:32000/memex-ui:0.0.1 -f docker/Dockerfile .

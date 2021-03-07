@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: mongo-svc
   labels:
-    name: memex-mongo
+    component: memex-mongo
 spec:
   ports:
     - port: 27017

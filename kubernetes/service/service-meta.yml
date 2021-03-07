@@ -9,3 +9,5 @@ spec:
     - port: 8080
       targetPort: 8080
   clusterIP: ${MEMEX_HOST}
+  selector:
+    component: memex-service
