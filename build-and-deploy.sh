@@ -9,12 +9,6 @@ set -x
 
 export USER_HOME=$1
 
-echo
-echo "[INFO] allowing outbound HTTPS"
-echo
-cd ${USER_HOME}/Workspace/personal-memex-server
-sh ufw/ufw-allow-out.sh
-
 read -p "Enter kubernetes cluster IP for elasticsearch (from service-cidr, default 10.152.183.0/24 on microk8s): " ELASTICSEARCH_HOST
 read -p "Enter kubernetes cluster IP for mongo (from service-cidr, default 10.152.183.0/24 on microk8s): " MONGO_HOST
 read -p "Enter kubernetes cluster IP for the memex-app (from service-cidr, default 10.152.183.0/24 on microk8s): " MEMEX_HOST
@@ -76,9 +70,3 @@ echo
 cd ${USER_HOME}/Workspace/personal-memex-service/docker/mongo
 cat dbInit.js | sed "s/\${MONGO_DEFAULT_USER_PW}/${MONGO_DEFAULT_USER_PW}/g" > dbInitInterpolated.sh
 mongo --host ${MONGO_HOST}:27017/memex < dbInitInterpolated.sh
-
-echo
-echo "[INFO] disallowing outbound HTTPS"
-echo
-cd ${USER_HOME}/Workspace/personal-memex-server
-sh ufw/ufw-deny-out.sh

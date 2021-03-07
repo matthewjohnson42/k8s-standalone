@@ -18,14 +18,15 @@ echo "[INFO]   disk mounting"
 echo "[INFO]   dev tool installation (maven, npm)"
 echo "[INFO]   container host installation (docker)"
 echo "[INFO]   container orchestration installation (kubernetes)"
-echo "[INFO]   firewall configuration (ufw)"
 echo "[INFO]   app build and deploy"
 echo
 
 echo
 echo "[INFO] starting configuration of disks"
 # set up disk using AWS UI and parted
-read -p "add disk to instance via AWS UI and enter disk name: " DISK_NAME
+echo
+echo "Please consider adding firewall rules for the instance via the AWS UI."
+read -p "Add disk to instance via AWS UI and enter disk name: " DISK_NAME
 if [ $(ls /dev | grep "${DISK_NAME}[0-9]" | wc -l | xargs) -eq 0 ]; then
   echo "partitions not found, creating"
   parted /dev/${DISK_NAME} mklabel gpt
@@ -89,15 +90,6 @@ cd ${USER_HOME}/Workspace/personal-memex-server
 sh kubernetes/kubernetes-init.sh ${USER_NAME} ${USER_HOME}
 echo
 echo "[INFO] Kubernetes setup complete"
-echo
-
-echo
-echo "[INFO] beginning configuration of firewall"
-echo
-cd ${USER_HOME}/Workspace/personal-memex-server
-sh ufw/ufw-init.sh
-echo
-echo "[INFO] configuration of firewall complete"
 echo
 
 echo

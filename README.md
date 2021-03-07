@@ -14,8 +14,6 @@ To initialize the server, run:
 
 To update the server, run the script `build-and-deploy.sh`.
 
-Note that the firewall is configured by the `ufw-init.sh` script. Outbound HTTP requests will be blocked without a run of `ufw-allow-out.sh`.
-
 ### webserver cert renewal
 
 Assumes that `server-init.sh` has been run on the system first.
