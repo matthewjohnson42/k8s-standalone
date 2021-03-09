@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: memex-ingress
+  labels:
+    component: ingress
+spec:
+  rules:
+    - host: personal-memex-service.matthewjohnson42.com
+      http:
+        paths:
+          - path: /
+          backend:
+            service:
+              name: memex-service-svc
+              port:
+                name: "memex-service-port"
+                number: 8080
+    - host: personal-memex-ui.matthewjohnson42.com
+      http:
+        paths:
+          - path: /
+          backend:
+            service:
+              name: memex-ui-svc
+                port:
+                  name: "memex-ui-port"
+                  number: 4200
