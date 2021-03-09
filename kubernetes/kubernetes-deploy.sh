@@ -49,6 +49,7 @@ kubectl apply -f mongo/interpolated-mongo-meta.yml
 kubectl apply -f elasticsearch/interpolated-es-meta.yml
 kubectl apply -f service/interpolated-service-meta.yml
 kubectl apply -f ui/interpolated-ui-meta.yml
+kubectl apply -f ingress/ingress.yml
 
 echo
 echo "[INFO] beginning deploy of mongo and elasticsearch"
