@@ -69,4 +69,4 @@ echo "[INFO] beginning configuration of mongo"
 echo
 cd ${USER_HOME}/Workspace/personal-memex-service/docker/mongo
 cat dbInit.js | sed "s/\${MONGO_DEFAULT_USER_PW}/${MONGO_DEFAULT_USER_PW}/g" > dbInitInterpolated.sh
-mongo --host ${MONGO_HOST}:27017/memex < dbInitInterpolated.sh
+mongo --host ${MONGO_HOST}:27017 < dbInitInterpolated.sh
