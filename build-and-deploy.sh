@@ -34,8 +34,6 @@ git fetch origin # sudo to deal with issues locking git files on AWS
 git checkout origin/master
 # copy of content from docker/docker-compose-up.sh
 # content here references docker internal to minikube, allowing for minikube to reference the built images
-docker build --tag localhost:32000/memex-mongo:0.0.1 --file docker/mongo/Dockerfile .
-docker push localhost:32000/memex-mongo:0.0.1
 mvn clean install -f app/pom.xml
 docker build --tag localhost:32000/memex-service:0.0.1 --file docker/app/Dockerfile .
 docker push localhost:32000/memex-service:0.0.1
@@ -68,5 +66,5 @@ echo
 echo "[INFO] beginning configuration of mongo"
 echo
 cd ${USER_HOME}/Workspace/personal-memex-service/docker/mongo
-cat dbInit.js | sed "s/\${MONGO_DEFAULT_USER_PW}/${MONGO_DEFAULT_USER_PW}/g" > dbInitInterpolated.sh
-mongo --host ${MONGO_HOST}:27017 < dbInitInterpolated.sh
+cat dbInit.js | sed "s/\${MONGO_DEFAULT_USER_PW}/${MONGO_DEFAULT_USER_PW}/g" > dbInitInterpolated.js
+mongo < dbInitInterpolated.js

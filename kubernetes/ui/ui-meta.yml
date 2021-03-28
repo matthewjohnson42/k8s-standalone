@@ -6,8 +6,8 @@ metadata:
     component: memex-ui
 spec:
   ports:
-    - port: 4200
-      targetPort: 4200
+    - port: 8088
+      targetPort: 80
   clusterIP: ${UI_HOST}
   selector:
     component: memex-ui

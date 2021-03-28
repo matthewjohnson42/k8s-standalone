@@ -16,7 +16,7 @@ spec:
             name: memex-service-svc
             port:
               number: 8080
-  - host: personal-memex-ui.matthewjohnson42.com
+  - host: memex.matthewjohnson42.com
     http:
       paths:
       - path: /
@@ -25,4 +25,4 @@ spec:
           service:
             name: memex-ui-svc
             port:
-              number: 4200
+              number: 8088
