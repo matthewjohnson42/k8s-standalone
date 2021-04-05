@@ -18,6 +18,7 @@ spec:
       containers:
       - name: memex-service
         image: localhost:32000/memex-service:0.0.1
+        imagePullPolicy: Always
         env:
         - name: "MONGO_HOST"
           value: "${MONGO_HOST}"
