@@ -38,6 +38,7 @@ mvn clean install -f app/pom.xml
 docker build --tag localhost:32000/memex-service:0.0.1 --file docker/app/Dockerfile .
 docker push localhost:32000/memex-service:0.0.1
 cd ${USER_HOME}/Workspace/personal-memex-ui
+git reset HEAD --hard
 git fetch origin
 git checkout origin/master
 # copy of content from docker/docker-compose-up.sh

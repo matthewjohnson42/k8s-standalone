@@ -13,5 +13,5 @@ spec:
         component: memex-ui
     spec:
       containers:
-        - name: memex-ui
-          image: localhost:32000/memex-ui:0.0.1
+      - name: memex-ui
+        image: localhost:32000/memex-ui:0.0.1
