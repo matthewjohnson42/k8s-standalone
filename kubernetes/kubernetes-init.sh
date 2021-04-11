@@ -27,6 +27,18 @@ cat << _EOF > ${USER_HOME}/daemon.json
 _EOF
 mv ${USER_HOME}/daemon.json /etc/docker/daemon.json
 systemctl restart docker
+# add ingress/tls pre-req to kubernetes
+sudo -u ${USER_NAME} -g docker bash -c 'microk8s kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.3.0/cert-manager.yaml'
+curl -L -o kubectl-cert-manager.tar.gz https://github.com/jetstack/cert-manager/releases/download/v1.3.0/kubectl-cert_manager-linux-amd64.tar.gz
+tar xzf kubectl-cert-manager.tar.gz
+sudo mv kubectl-cert_manager /usr/local/bin
+# add ingress/tls
+sudo -u ${USER_NAME} -g docker bash -c 'microk8s kubectl apply -f ${HOME}/Workspace/personal-memex-server/kubernetes/ingress/ingress-meta.yml'
+sudo -u ${USER_NAME} -g docker bash -c 'microk8s kubectl apply -f ${HOME}/Workspace/personal-memex-server/kubernetes/ingress/ingress.yml'
+echo
+echo "[INFO] please pause to open port 443 on the AWS instance"
+read empty
+echo
 COUNT=0
 while [ ${COUNT} -lt ${#USER_GROUPS[@]} ]; do
   GROUPS_STRING="${GROUPS_STRING} -G ${USER_GROUPS[${COUNT}]}"

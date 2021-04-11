@@ -2,9 +2,17 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: memex-ingress
+  annotations:
+    cert-manager.io/issuer: "letsencrypt-prod"
+    acme.cert-manager.io/http01-edit-in-place: "true"
   labels:
     component: ingress
 spec:
+  tls:
+  - hosts:
+    - personal-memex-service.matthewjohnson42.com
+    - memex.matthewjohnson42.com
+    secretName: memex-tls
   rules:
   - host: personal-memex-service.matthewjohnson42.com
     http:
