@@ -13,9 +13,3 @@ To initialize the server, run:
 * `sudo sh ~/server-init.sh ${USER} ${HOME}`
 
 To update the server, run the script `build-and-deploy.sh`.
-
-### webserver cert renewal
-
-Assumes that `server-init.sh` has been run on the system first.
-
-To renew the cert:

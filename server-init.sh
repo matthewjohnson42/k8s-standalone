@@ -1,5 +1,6 @@
 #! /bin/bash
 # todo: remove -x from scripts when scripts validated
+# todo: split out server init and app deploys
 set -x
 
 # init script for server hosting matthewjohnson42/personal-memex-service and matthewjohnson42/personal-memex-ui
