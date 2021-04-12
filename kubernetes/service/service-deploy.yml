@@ -20,6 +20,8 @@ spec:
         image: localhost:32000/memex-service:0.0.1
         imagePullPolicy: Always
         env:
+        - name: "SPRING_PROFILES_ACTIVE"
+          value: "prod"
         - name: "MONGO_HOST"
           value: "${MONGO_HOST}"
         - name: "MONGO_PORT"
