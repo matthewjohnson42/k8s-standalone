@@ -28,20 +28,41 @@ echo "[INFO] starting configuration of disks"
 echo
 echo "Please consider adding firewall rules for the instance via the AWS UI."
 read -p "Add disk to instance via AWS UI and enter disk name: " DISK_NAME
-if [ $(ls /dev | grep "${DISK_NAME}[0-9]" | wc -l | xargs) -eq 0 ]; then
+partition1=$(ls /dev/ | grep ${DISK_NAME} | sort | tail -n 2 | head -n 1 | grep '1$')
+partition2=$(ls /dev/ | grep ${DISK_NAME} | sort | tail -n 1 | grep '2$')
+if [[ ! "${partition1}" ]] && [[ ! "${partition2}" ]]; then
   echo "partitions not found, creating"
+  read -p "Please enter starting memory offset for partition 1 holding mongo (1MB assuming 8 GB disk): " PART1_START
+  read -p "Please enter ending memory offset for partition 1 holding mongo (4097MB assuming 8 GB disk): " PART1_END
+  read -p "Please enter starting memory offset for partition 1 holding elasticsearch (4098MB assuming 8 GB disk): " PART2_START
+  read -p "Please enter ending memory offset for partition 1 holding elasticsearch (8195MB assuming 8 GB disk): " PART2_END
   parted /dev/${DISK_NAME} mklabel gpt
-  parted /dev/${DISK_NAME} mkpart data ext4 1MB 4097MB
-  parted /dev/${DISK_NAME} mkpart data ext4 4098MB 8195MB
-  mkfs.ext4 /dev/${DISK_NAME}1
-  mkfs.ext4 /dev/${DISK_NAME}2
+  parted /dev/${DISK_NAME} mkpart data ext4 ${PART1_START} ${PART1_END}
+  parted /dev/${DISK_NAME} mkpart data ext4 ${PART2_START} ${PART2_END}
+  if [[ ${partition1} ]]; then
+    mkfs.ext4 ${partition1}
+  else
+    echo "Did not find partition 1 in expected location"
+    echo "List of partitions for disk ${DISK_NAME}"
+    echo "$(ls -la /dev | grep ${DISK_NAME})"
+    exit 1
+  fi
+  if [[ ${partition2} ]]; then
+    mkfs.ext4 ${partition2}
+  else
+    echo "Did not find partition 2 in expected location"
+    echo "List of partitions for disk ${DISK_NAME}"
+    echo "$(ls -la /dev | grep ${DISK_NAME})"
+    exit 1
+  fi
 fi
+
 echo "[INFO] creating mount points and performing mount"
 mkdir /data
 mkdir /data/db
 mkdir /data/es
-mount /dev/${DISK_NAME}1 /data/db
-mount /dev/${DISK_NAME}2 /data/es
+mount /dev/${partition1} /data/db
+mount /dev/${partition2} /data/es
 chmod -R a+rw /data
 chown -R root:root /data
 echo "[INFO] disk configuration complete"
