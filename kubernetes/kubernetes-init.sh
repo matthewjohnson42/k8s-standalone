@@ -35,7 +35,9 @@ tar xzf kubectl-cert-manager.tar.gz
 sudo mv kubectl-cert_manager /usr/local/bin
 # add ingress/tls
 sudo -u ${USER_NAME} -g docker bash -c 'microk8s kubectl apply -f ${HOME}/Workspace/personal-memex-server/kubernetes/ingress/ingress-meta.yml'
+echo "Waiting 30s for ingress metadata to be applied" && sleep 30;
 sudo -u ${USER_NAME} -g docker bash -c 'microk8s kubectl apply -f ${HOME}/Workspace/personal-memex-server/kubernetes/ingress/ingress.yml'
+echo "Waiting 30s for ingress controller to be applied" && sleep 30;
 echo
 echo "[INFO] please pause to open port 443 on the AWS instance"
 read empty
