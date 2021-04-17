@@ -1,5 +1,4 @@
 #!/bin/bash
-set -x
 
 # installs the container orchestration system (kubernetes on containerd)
 # invoked from server-init.sh
@@ -41,6 +40,8 @@ echo "Waiting 30s for ingress controller to be applied" && sleep 30;
 echo
 echo "[INFO] please pause to open port 443 on the AWS instance"
 read empty
+echo
+echo "[INFO] configuration of microk8s complete"
 echo
 echo "[INFO] kubernetes install complete"
 echo

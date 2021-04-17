@@ -1,6 +1,4 @@
 #! /bin/bash
-set -x
-
 # usage: no args, requires kubernetes configuration for user (.kube typically)
 # assumes directory of execution is personal-memex-server/kubernetes
 
@@ -29,7 +27,7 @@ else
 fi
 
 echo
-echo "[INFO] interpolating Kubernetes configuration files"
+echo "[INFO] interpolating Kubernetes configuration files in ${PWD}"
 echo
 cat mongo/mongo-meta.yml | sed "s/\${MONGO_HOST}/${MONGO_HOST}/g" | sed "s/\${NODE_NAME}/${NODE_NAME}/g" > \
   mongo/interpolated-mongo-meta.yml
@@ -63,7 +61,7 @@ echo "[INFO] deploy of mongo and elasticsearch complete"
 echo
 echo "[INFO] pausing to allow for elastic initialization"
 echo
-sleep 15 # wait for elastic search to initialize
+sleep 15
 
 echo
 echo "[INFO] beginning deploy of service and UI"
