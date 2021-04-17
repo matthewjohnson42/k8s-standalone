@@ -30,7 +30,7 @@ echo "Please consider adding firewall rules for the instance via the AWS UI."
 read -p "Add disk to instance via AWS UI and enter disk name: " DISK_NAME
 partition1=$(ls /dev/ | grep ${DISK_NAME} | sort | tail -n 2 | head -n 1 | grep '1$')
 partition2=$(ls /dev/ | grep ${DISK_NAME} | sort | tail -n 1 | grep '2$')
-if [[ ! "${partition1}" ]] && [[ ! "${partition2}" ]]; then
+if [[ -z "${partition1}" ]] || [[ -z "${partition2}" ]]; then
   echo "partitions not found, creating"
   read -p "Please enter starting memory offset for partition 1 holding mongo (1MB assuming 8 GB disk): " PART1_START
   read -p "Please enter ending memory offset for partition 1 holding mongo (4097MB assuming 8 GB disk): " PART1_END
