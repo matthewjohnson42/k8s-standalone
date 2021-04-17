@@ -12,7 +12,7 @@ echo
 # install microk8s to allow for kubernetes master (control plane) and slave (node) on a single host
 # microk8s=1.20 has same transitive dependency, containerd=1.3.7, as docker=19.0.13
 sudo -u ${USER_NAME} -g docker bash -c 'sudo snap install --classic --channel=1.20/stable microk8s'
-GROUPS_CMD_STRING="$(groups ${USER_NAME} | sed 's/ /,/g'),microk8s"
+GROUPS_CMD_STRING="$(groups ${USER_NAME} | sed "s/${USER_NAME}.*:\s*//" | sed 's/ /,/g'),microk8s"
 usermod -G ${GROUPS_CMD_STRING} ${USER_NAME}
 echo
 echo "[INFO] beginning configuration of microk8s"
