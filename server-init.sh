@@ -83,12 +83,9 @@ apt-get install -y npm maven mongodb-clients docker-ce=5:19.03.13~3-0~ubuntu-foc
 systemctl enable docker
 # add user to the docker user group.
 # allows access to the docker daemon via docker unix socket, accessed by the `docker` cmd line util.
-prevGroups=$(groups ${USER_NAME} | sed 's/^[A-z0-9_-]*\$*\s*:\s*//g')
+GROUPS_CMD_STRING="$(groups ${USER_NAME} | sed 's/ /,/g'),docker"
 usermod -g docker ${USER_NAME}
-for group in ${prevGroups}; do
-  usermod -G ${group} ${USER_NAME}
-done
-usermod -G docker ${USER}
+usermod -G ${GROUPS_CMD_STRING} ${USER_NAME}
 echo
 echo "[INFO] dev toolchain setup complete"
 echo
