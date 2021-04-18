@@ -43,14 +43,39 @@ fi
 
 echo
 echo "[INFO] creating mount points and performing mount"
-mkdir /data
-mkdir /data/db
-mkdir /data/es
-mount /dev/${partition1} /data/db
-mount /dev/${partition2} /data/es
+MONGO_DIR="/data/db"
+ES_DIR="/data/es"
+mkdir -p ${MONGO_DIR}
+mkdir -p ${ES_DIR}
+mount /dev/${partition1} ${MONGO_DIR}
+mount /dev/${partition2} ${ES_DIR}
 chmod -R a+rw /data
 chown -R root:root /data
 echo "[INFO] disk configuration complete"
+echo
+
+echo
+echo "[INFO] adding scheduled backup of /data/db at 3 AM"
+echo
+ARCHIVE_DIR="${USER_HOME}/dbArchives"
+ARCHIVE_LIMIT=50
+mkdir -p "${ARCHIVE_DIR}"
+
+# crontab entry. runs 3 AM every day. tars and zips the mongo db directory. removes archives in excess of limit.
+echo "* 3 * * *    sudo tar -c ${MONGO_DIR} | gzip > \"${ARCHIVE_DIR}/\$(date +%Y%m%d%H%M%S).tar.gz\"; \
+cd ${ARCHIVE_DIR}; \
+archives=(\$(ls | sort -r)); \
+count=0; \
+while [ \${count} -lt \${#archives[@]} ]; do \
+if [ \${count} -gt ${ARCHIVE_LIMIT} ]; then \
+rm \${archives[\${count}]}; \
+fi; \
+count=\$((\${count}+1)); \
+done" > crontab
+
+crontab crontab
+echo
+echo "[INFO] scheduled backup added"
 echo
 
 echo
@@ -68,7 +93,7 @@ apt-get install -y npm maven mongodb-clients docker-ce=5:19.03.13~3-0~ubuntu-foc
 systemctl enable docker
 # add user to the docker user group.
 # allows access to the docker daemon via docker unix socket, accessed by the `docker` cmd line util.
-GROUPS_CMD_STRING="$(groups ${USER_NAME} | sed "s/${USER_NAME}.*:\s*//" | sed 's/\s*/,/g'),docker"
+GROUPS_CMD_STRING="$(groups ${USER_NAME} | sed "s/${USER_NAME}.*:\s*//" | sed 's/\s\+/,/g'),docker"
 usermod -g docker ${USER_NAME}
 usermod -G ${GROUPS_CMD_STRING} ${USER_NAME}
 echo
