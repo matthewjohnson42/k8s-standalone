@@ -34,10 +34,12 @@ curl -L -o kubectl-cert-manager.tar.gz https://github.com/jetstack/cert-manager/
 tar xzf kubectl-cert-manager.tar.gz
 sudo mv kubectl-cert_manager /usr/local/bin
 # add ingress/tls
-sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/ingress/ingress-meta.yml"
-echo "Waiting 30s for ingress metadata to be applied" && sleep 30;
-sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/ingress/ingress.yml"
-echo "Waiting 30s for ingress controller to be applied" && sleep 30;
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/ingress/memex/ingress-meta.yml"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/ingress/memex/ingress-meta.yml"
+echo "Waiting 10s for ingress metadata to be applied" && sleep 10;
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/ingress/professional-website/ingress.yml"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/ingress/professional-website/ingress.yml"
+echo "Waiting 10s for ingress controller to be applied" && sleep 10;
 echo
 echo "[INFO] please pause to open port 443 on the AWS instance"
 read empty
