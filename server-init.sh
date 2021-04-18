@@ -33,13 +33,13 @@ if [ -z "${partition1}" ] && [ -z "${partition2}" ]; then
   read -p "Please enter ending memory offset for partition 1 holding mongo (4097MB assuming 8 GB disk): " PART1_END
   read -p "Please enter starting memory offset for partition 1 holding elasticsearch (4098MB assuming 8 GB disk): " PART2_START
   read -p "Please enter ending memory offset for partition 1 holding elasticsearch (8195MB assuming 8 GB disk): " PART2_END
-  parted /dev/${DISK_NAME} mklabel gpt
-  parted /dev/${DISK_NAME} mkpart data ext4 ${PART1_START} ${PART1_END}
-  parted /dev/${DISK_NAME} mkpart data ext4 ${PART2_START} ${PART2_END}
+  parted /dev/${DISK_NAME} mklabel gpt && sleep 1
+  parted /dev/${DISK_NAME} mkpart data ext4 ${PART1_START} ${PART1_END} && sleep 1
+  parted /dev/${DISK_NAME} mkpart data ext4 ${PART2_START} ${PART2_END} && sleep 1
   partition1=$(ls /dev/ | grep ${DISK_NAME} | sort | tail -n 2 | head -n 1 | grep 'p1$')
   partition2=$(ls /dev/ | grep ${DISK_NAME} | sort | tail -n 1 | grep 'p2$')
-  mkfs.ext4 ${partition1}
-  mkfs.ext4 ${partition2}
+  mkfs.ext4 /dev/${partition1}
+  mkfs.ext4 /dev/${partition2}
 fi
 echo
 read -p "Add backup disk to AWS instance via AWS UI and enter backup disk name: " DISK2_NAME
@@ -48,10 +48,10 @@ if [ -z "${partition3}" ]; then
   echo "partitions not found, creating"
   read -p "Please enter starting memory offset for partition 1 holding mongo (1MB assuming 8 GB disk): " PART3_START
   read -p "Please enter ending memory offset for partition 1 holding mongo (8195MB assuming 8 GB disk): " PART3_END
-  parted /dev/${DISK2_NAME} mklabel gpt
-  parted /dev/${DISK2_NAME} mkpart data ext4 ${PART3_START} ${PART3_END}
+  parted /dev/${DISK2_NAME} mklabel gpt && sleep 1
+  parted /dev/${DISK2_NAME} mkpart data ext4 ${PART3_START} ${PART3_END} && sleep 1
   partition3=$(ls /dev/ | grep ${DISK2_NAME} | sort | tail -n 1 | grep 'p1$')
-  mkfs.ext4 ${partition3}
+  mkfs.ext4 /dev/${partition3}
 fi
 
 echo

@@ -15,7 +15,7 @@ spec:
     solvers:
       - selector:
           dnsNames:
-            - 'personal-memex-service.matthewjohnson42.com'
+            - 'memex-service.matthewjohnson42.com'
             - 'memex.matthewjohnson42.com'
         http01:
           ingress:
