@@ -36,6 +36,8 @@ if [ -z "${partition1}" ] && [ -z "${partition2}" ]; then
   parted /dev/${DISK_NAME} mklabel gpt
   parted /dev/${DISK_NAME} mkpart data ext4 ${PART1_START} ${PART1_END}
   parted /dev/${DISK_NAME} mkpart data ext4 ${PART2_START} ${PART2_END}
+  partition1=$(ls /dev/ | grep ${DISK_NAME} | sort | tail -n 2 | head -n 1 | grep 'p1$')
+  partition2=$(ls /dev/ | grep ${DISK_NAME} | sort | tail -n 1 | grep 'p2$')
   mkfs.ext4 ${partition1}
   mkfs.ext4 ${partition2}
 fi
@@ -48,6 +50,7 @@ if [ -z "${partition3}" ]; then
   read -p "Please enter ending memory offset for partition 1 holding mongo (8195MB assuming 8 GB disk): " PART3_END
   parted /dev/${DISK2_NAME} mklabel gpt
   parted /dev/${DISK2_NAME} mkpart data ext4 ${PART3_START} ${PART3_END}
+  partition3=$(ls /dev/ | grep ${DISK2_NAME} | sort | tail -n 1 | grep 'p1$')
   mkfs.ext4 ${partition3}
 fi
 
