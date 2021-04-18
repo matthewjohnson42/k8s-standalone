@@ -24,8 +24,7 @@ echo
 echo "[INFO] starting configuration of disks"
 # set up disk using AWS UI and parted
 echo
-echo "Please consider adding firewall rules for the instance via the AWS UI."
-read -p "Add disk to instance via AWS UI and enter disk name: " DISK_NAME
+read -p "Add primary disk to AWS instance via AWS UI and enter primary disk name: " DISK_NAME
 partition1=$(ls /dev/ | grep ${DISK_NAME} | sort | tail -n 2 | head -n 1 | grep '1$')
 partition2=$(ls /dev/ | grep ${DISK_NAME} | sort | tail -n 1 | grep '2$')
 if [ -z "${partition1}" ] && [ -z "${partition2}" ]; then
@@ -40,24 +39,41 @@ if [ -z "${partition1}" ] && [ -z "${partition2}" ]; then
   mkfs.ext4 ${partition1}
   mkfs.ext4 ${partition2}
 fi
+echo
+read -p "Add backup disk to AWS instance via AWS UI and enter backup disk name: " DISK2_NAME
+partition3=$(ls /dev/ | grep ${DISK2_NAME} | sort | tail -n 1 | grep '1$')
+if [ -z "${partition3}" ]; then
+  echo "partitions not found, creating"
+  read -p "Please enter starting memory offset for partition 1 holding mongo (1MB assuming 8 GB disk): " PART3_START
+  read -p "Please enter ending memory offset for partition 1 holding mongo (8195MB assuming 8 GB disk): " PART3_END
+  parted /dev/${DISK2_NAME} mklabel gpt
+  parted /dev/${DISK2_NAME} mkpart data ext4 ${PART3_START} ${PART3_END}
+  mkfs.ext4 ${partition3}
+fi
 
 echo
 echo "[INFO] creating mount points and performing mount"
 MONGO_DIR="/data/db"
 ES_DIR="/data/es"
+BACKUP_DIR="/backup/db"
 mkdir -p ${MONGO_DIR}
 mkdir -p ${ES_DIR}
+mkdir -p ${BACKUP_DIR}
 mount /dev/${partition1} ${MONGO_DIR}
 mount /dev/${partition2} ${ES_DIR}
+mount /dev/${partition3} ${BACKUP_DIR}
+
 chmod -R a+rw /data
 chown -R root:root /data
+chmod -R a+rw /backup
+chown -R root:root /backup
 echo "[INFO] disk configuration complete"
 echo
 
 echo
 echo "[INFO] adding scheduled backup of /data/db at 3 AM"
 echo
-ARCHIVE_DIR="${USER_HOME}/dbArchives"
+ARCHIVE_DIR="${BACKUP_DIR}"
 ARCHIVE_LIMIT=50
 mkdir -p "${ARCHIVE_DIR}"
 
