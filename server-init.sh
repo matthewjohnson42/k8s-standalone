@@ -25,8 +25,8 @@ echo "[INFO] starting configuration of disks"
 # set up disk using AWS UI and parted
 echo
 read -p "Add primary disk to AWS instance via AWS UI and enter primary disk name: " DISK_NAME
-partition1=$(ls /dev/ | grep ${DISK_NAME} | sort | tail -n 2 | head -n 1 | grep '1$')
-partition2=$(ls /dev/ | grep ${DISK_NAME} | sort | tail -n 1 | grep '2$')
+partition1=$(ls /dev/ | grep ${DISK_NAME} | sort | tail -n 2 | head -n 1 | grep 'p1$')
+partition2=$(ls /dev/ | grep ${DISK_NAME} | sort | tail -n 1 | grep 'p2$')
 if [ -z "${partition1}" ] && [ -z "${partition2}" ]; then
   echo "partitions not found, creating"
   read -p "Please enter starting memory offset for partition 1 holding mongo (1MB assuming 8 GB disk): " PART1_START
@@ -41,7 +41,7 @@ if [ -z "${partition1}" ] && [ -z "${partition2}" ]; then
 fi
 echo
 read -p "Add backup disk to AWS instance via AWS UI and enter backup disk name: " DISK2_NAME
-partition3=$(ls /dev/ | grep ${DISK2_NAME} | sort | tail -n 1 | grep '1$')
+partition3=$(ls /dev/ | grep ${DISK2_NAME} | sort | tail -n 1 | grep 'p1$')
 if [ -z "${partition3}" ]; then
   echo "partitions not found, creating"
   read -p "Please enter starting memory offset for partition 1 holding mongo (1MB assuming 8 GB disk): " PART3_START
