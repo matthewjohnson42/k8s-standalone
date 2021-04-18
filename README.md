@@ -7,7 +7,7 @@ The cluster provides hosting for a personal memex project as implemented by [mem
 
 To initialize the server providing hosting for the Kubernetes cluster, login to the server and run:
 
-* `curl https://raw.githubusercontent.com/matthewjohnson42/personal-memex-server/master/server-init.sh -o ~/server-init.sh`
+* `curl https://raw.githubusercontent.com/matthewjohnson42/k8s-standalone/master/server-init.sh -o ~/server-init.sh`
 * `sudo sh ~/server-init.sh ${USER} ${HOME}`
 
 To update the server, run the scripts titled `build-and-deploy.sh` in the subdirectories of the `kubernetes` directory.

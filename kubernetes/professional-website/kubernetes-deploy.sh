@@ -1,6 +1,6 @@
 #! /bin/bash
 # usage: no args, requires kubernetes configuration for user (.kube typically)
-# assumes directory of execution is personal-memex-server/kubernetes
+# assumes directory of execution is memex-server/kubernetes/professional-website
 
 USER_HOME=$1
 alias kubectl="microk8s kubectl"

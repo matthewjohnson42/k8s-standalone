@@ -30,7 +30,7 @@ echo "USERPASS_ENC_KEY_SECRET=${USERPASS_ENC_KEY_SECRET}" >> "${USER_HOME}/deplo
 echo
 echo "[INFO] beginning build of docker containers for service and UI"
 echo
-cd ${USER_HOME}/Workspace/personal-memex-service
+cd ${USER_HOME}/Workspace/memex-service
 git fetch origin # sudo to deal with issues locking git files on AWS
 git checkout origin/master
 # copy of content from docker/docker-compose-up.sh
@@ -38,7 +38,7 @@ git checkout origin/master
 mvn clean install -f app/pom.xml
 docker build --tag localhost:32000/memex-service:0.0.1 --file docker/app/Dockerfile .
 docker push localhost:32000/memex-service:0.0.1
-cd ${USER_HOME}/Workspace/personal-memex-ui
+cd ${USER_HOME}/Workspace/memex-ui
 git reset HEAD --hard
 git fetch origin
 git checkout origin/master

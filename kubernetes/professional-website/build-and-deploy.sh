@@ -1,7 +1,7 @@
 #! /bin/bash
 set -x
 
-# build script for the personal-website container
+# build script for the professional-website container
 # invokes k8s deploy script after build
 
 # note: requires root user permissions
