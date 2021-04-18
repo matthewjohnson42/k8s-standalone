@@ -26,8 +26,8 @@ echo "[INFO] application of k8s service complete"
 echo
 echo "[INFO] beginning deploy of professional-website"
 echo
-kubectl apply -f elasticsearch/interpolated-es-meta.yml
-kubectl rollout status -w statefulset/memex-elasticsearch
+kubectl apply -f professional-website-deploy.yml
+kubectl rollout status -w statefulset/professional-website
 echo
 echo "[INFO] deploy of professional-website complete"
 echo
