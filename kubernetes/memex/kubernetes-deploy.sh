@@ -52,10 +52,14 @@ kubectl apply -f ingress/ingress.yml
 echo
 echo "[INFO] beginning deploy of mongo and elasticsearch"
 echo
-kubectl apply -f elasticsearch/es-deploy.yml
-kubectl apply -f mongo/mongo-deploy.yml
-kubectl rollout status -w statefulset/memex-elasticsearch
+kubectl delete statefulset/memex-mongo
 kubectl rollout status -w statefulset/memex-mongo
+kubectl delete statefulset/memex-elasticsearch
+kubectl rollout status -w statefulset/memex-elasticsearch
+kubectl apply -f mongo/mongo-deploy.yml
+kubectl apply -f elasticsearch/es-deploy.yml
+kubectl rollout status -w statefulset/memex-mongo
+kubectl rollout status -w statefulset/memex-elasticsearch
 echo
 echo "[INFO] deploy of mongo and elasticsearch complete"
 echo
@@ -66,6 +70,10 @@ sleep 15
 echo
 echo "[INFO] beginning deploy of service and UI"
 echo
+kubectl delete statefulset/memex-service
+kubectl rollout status -w statefulset/memex-service
+kubectl delete statefulset/memex-ui
+kubectl rollout status -w statefulset/memex-ui
 kubectl apply -f service/interpolated-service-deploy.yml
 kubectl apply -f ui/ui-deploy.yml
 kubectl rollout status -w statefulset/memex-service
