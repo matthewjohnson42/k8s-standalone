@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: professional-website-svc
+  labels:
+    component: professional-website
+spec:
+  ports:
+    - port: 8088
+      targetPort: 8088
+  clusterIP: ${WEBSITE_HOST}
+  selector:
+    component: professional-website

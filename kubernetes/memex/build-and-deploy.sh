@@ -2,6 +2,7 @@
 set -x
 
 # build script for the different components of the app
+# invokes k8s deploy script after build
 
 # note: requires root user permissions
 # usage: as default user, `sudo sh build-and-deploy.sh ${HOME}`
@@ -57,7 +58,7 @@ echo
 echo
 echo "[INFO] beginning deploy to Kubernetes"
 echo
-cd ${USER_HOME}/Workspace/personal-memex-server/kubernetes
+cd ${USER_HOME}/Workspace/k8s-standalone/kubernetes
 sh kubernetes-deploy.sh ${USER_HOME}
 echo
 echo "[INFO] deploy to Kubernetes complete"
@@ -66,6 +67,6 @@ echo
 echo
 echo "[INFO] beginning configuration of mongo"
 echo
-cd ${USER_HOME}/Workspace/personal-memex-service/docker/mongo
+cd ${USER_HOME}/Workspace/k8s-standalone/docker/mongo
 cat dbInit.js | sed "s/\${MONGO_DEFAULT_USER_PW}/${MONGO_DEFAULT_USER_PW}/g" > dbInitInterpolated.js
 mongo < dbInitInterpolated.js

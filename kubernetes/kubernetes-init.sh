@@ -11,31 +11,32 @@ echo "[INFO] starting install of kubernetes as microk8s"
 echo
 # install microk8s to allow for kubernetes master (control plane) and slave (node) on a single host
 # microk8s=1.20 has same transitive dependency, containerd=1.3.7, as docker=19.0.13
-sudo -u ${USER_NAME} -g docker bash -c 'sudo snap install --classic --channel=1.20/stable microk8s'
-GROUPS_CMD_STRING="$(groups ${USER_NAME} | sed "s/${USER_NAME}.*:\s*//" | sed 's/ /,/g'),microk8s"
-usermod -G ${GROUPS_CMD_STRING} ${USER_NAME}
+sudo -u "${USER_NAME}" -g docker bash -c 'sudo snap install --classic --channel=1.20/stable microk8s'
+GROUPS_CMD_STRING="$(groups ${USER_NAME} | sed "s/${USER_NAME}.*:\s*//" | sed 's/\s*/,/g'),microk8s"
+usermod -G "${GROUPS_CMD_STRING}" "${USER_NAME}"
 echo
 echo "[INFO] beginning configuration of microk8s"
 echo
 # configure microk8s
-sudo -u ${USER_NAME} -g docker bash -c 'microk8s enable dns registry storage ingress linkerd'
+sudo -u "${USER_NAME}" -g docker bash -c 'microk8s enable dns registry storage ingress linkerd'
 # trust the microk8s docker repository on localhost
-cat << _EOF > ${USER_HOME}/daemon.json
+cat << _EOF > "${USER_HOME}/daemon.json"
 {
   "insecure-registries" : ["localhost:32000"]
 }
 _EOF
-mv ${USER_HOME}/daemon.json /etc/docker/daemon.json
+mv "${USER_HOME}/daemon.json" /etc/docker/daemon.json
 systemctl restart docker
 # add ingress/tls pre-req to kubernetes
-sudo -u ${USER_NAME} -g docker bash -c 'microk8s kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.3.0/cert-manager.yaml'
+sudo -u "${USER_NAME}" -g docker bash -c 'microk8s kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.3.0/cert-manager.yaml'
+echo "Waiting 30s for cert-manager containers to be applied" && sleep 30;
 curl -L -o kubectl-cert-manager.tar.gz https://github.com/jetstack/cert-manager/releases/download/v1.3.0/kubectl-cert_manager-linux-amd64.tar.gz
 tar xzf kubectl-cert-manager.tar.gz
 sudo mv kubectl-cert_manager /usr/local/bin
 # add ingress/tls
-sudo -u ${USER_NAME} -g docker bash -c 'microk8s kubectl apply -f ${HOME}/Workspace/personal-memex-server/kubernetes/ingress/ingress-meta.yml'
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/ingress/ingress-meta.yml"
 echo "Waiting 30s for ingress metadata to be applied" && sleep 30;
-sudo -u ${USER_NAME} -g docker bash -c 'microk8s kubectl apply -f ${HOME}/Workspace/personal-memex-server/kubernetes/ingress/ingress.yml'
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/ingress/ingress.yml"
 echo "Waiting 30s for ingress controller to be applied" && sleep 30;
 echo
 echo "[INFO] please pause to open port 443 on the AWS instance"

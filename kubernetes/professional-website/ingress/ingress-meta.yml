@@ -13,10 +13,9 @@ spec:
       name: letsencrypt-prod
     # Enable the HTTP-01 challenge provider
     solvers:
-#      - selector:
-#          dnsNames:
-#            - 'personal-memex-service.matthewjohnson42.com'
-#            - 'memex.matthewjohnson42.com'
+      - selector:
+          dnsNames:
+            - 'matthewjohnson42.com'
         http01:
           ingress:
             class: nginx

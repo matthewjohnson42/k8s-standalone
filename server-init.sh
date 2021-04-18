@@ -1,13 +1,11 @@
 #! /bin/bash
 # todo: remove -x from scripts when scripts validated
-# todo: split out server init and app deploys
 set -x
 
-# init script for server hosting matthewjohnson42/personal-memex-service and matthewjohnson42/personal-memex-ui
+# init script for a single-node kubernetes cluster
 
 # note: requires root user permissions
 # usage: as default user, `sudo sh server-init.sh ${USER} ${HOME}`
-# usage: as root (IE, using sudo), `sh build-and-deploy.sh <default-user-home-directory>`
 
 USER_NAME=$1
 USER_HOME=$2
@@ -17,9 +15,9 @@ echo "[INFO] starting initialization of server"
 echo "[INFO] includes:"
 echo "[INFO]   disk mounting"
 echo "[INFO]   dev tool installation (maven, npm)"
-echo "[INFO]   container host installation (docker)"
-echo "[INFO]   container orchestration installation (kubernetes)"
-echo "[INFO]   app build and deploy"
+echo "[INFO]   clone of repositories to host"
+echo "[INFO]   container cli installation (docker for containerd)"
+echo "[INFO]   container orchestration installation (kubernetes as microk8s on containerd)"
 echo
 
 echo
@@ -39,24 +37,16 @@ if [[ -z "${partition1}" ]] || [[ -z "${partition2}" ]]; then
   parted /dev/${DISK_NAME} mklabel gpt
   parted /dev/${DISK_NAME} mkpart data ext4 ${PART1_START} ${PART1_END}
   parted /dev/${DISK_NAME} mkpart data ext4 ${PART2_START} ${PART2_END}
-  if [[ ${partition1} ]]; then
-    mkfs.ext4 ${partition1}
-  else
-    echo "Did not find partition 1 in expected location"
-    echo "List of partitions for disk ${DISK_NAME}"
-    echo "$(ls -la /dev | grep ${DISK_NAME})"
-    exit 1
-  fi
-  if [[ ${partition2} ]]; then
-    mkfs.ext4 ${partition2}
-  else
-    echo "Did not find partition 2 in expected location"
-    echo "List of partitions for disk ${DISK_NAME}"
-    echo "$(ls -la /dev | grep ${DISK_NAME})"
-    exit 1
-  fi
+  mkfs.ext4 ${partition1}
+  mkfs.ext4 ${partition2}
+else
+  echo "Did not find expected partitions /${DISK_NAME}.*1/ and /${DISK_NAME}.*2/"
+  echo "List of partitions for disk ${DISK_NAME}:"
+  echo "$(ls -la /dev | grep ${DISK_NAME})"
+  exit 1
 fi
 
+echo
 echo "[INFO] creating mount points and performing mount"
 mkdir /data
 mkdir /data/db
@@ -83,7 +73,7 @@ apt-get install -y npm maven mongodb-clients docker-ce=5:19.03.13~3-0~ubuntu-foc
 systemctl enable docker
 # add user to the docker user group.
 # allows access to the docker daemon via docker unix socket, accessed by the `docker` cmd line util.
-GROUPS_CMD_STRING="$(groups ${USER_NAME} | sed "s/${USER_NAME}.*:\s*//" | sed 's/ /,/g'),docker"
+GROUPS_CMD_STRING="$(groups ${USER_NAME} | sed "s/${USER_NAME}.*:\s*//" | sed 's/\s*/,/g'),docker"
 usermod -g docker ${USER_NAME}
 usermod -G ${GROUPS_CMD_STRING} ${USER_NAME}
 echo
@@ -93,10 +83,11 @@ echo "[INFO] beginning setup of app sources"
 echo
 mkdir ${USER_HOME}/Workspace/
 cd ${USER_HOME}/Workspace
-git clone https://github.com/matthewjohnson42/personal-memex-server.git
-git clone https://github.com/matthewjohnson42/personal-memex-service.git
-git clone https://github.com/matthewjohnson42/personal-memex-ui.git
-cd ${USER_HOME}/Workspace/personal-memex-ui
+git clone https://github.com/matthewjohnson42/k8s-standalone.git
+git clone https://github.com/matthewjohnson42/memex-service.git
+git clone https://github.com/matthewjohnson42/memex-ui.git
+git clone https://github.com/matthewjohnson42/professional-website.git
+cd ${USER_HOME}/Workspace/memex-ui
 npm install ng
 echo
 echo "[INFO] setup of app sources complete"
@@ -105,17 +96,14 @@ echo
 echo
 echo "[INFO] starting setup of Kubernetes"
 echo
-cd ${USER_HOME}/Workspace/personal-memex-server
+cd ${USER_HOME}/Workspace/k8s-standalone
 sh kubernetes/kubernetes-init.sh ${USER_NAME} ${USER_HOME}
 echo
 echo "[INFO] Kubernetes setup complete"
 echo
 
 echo
-echo "[INFO] starting deploy of application"
+echo "[INFO] server initialization complete."
 echo
-cd ${USER_HOME}/Workspace/personal-memex-server
-sh build-and-deploy.sh ${USER_HOME}
-echo
-echo "[INFO] deploy of application complete"
+echo "[INFO] deploy of apps can be accomplished by running the build-and-deploy.sh scripts in the k8s-standalone repository that has been cloned into ${USER_HOME}/Workspace"
 echo
