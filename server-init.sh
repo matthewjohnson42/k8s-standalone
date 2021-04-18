@@ -1,6 +1,4 @@
 #! /bin/bash
-# todo: remove -x from scripts when scripts validated
-set -x
 
 # init script for a single-node kubernetes cluster
 

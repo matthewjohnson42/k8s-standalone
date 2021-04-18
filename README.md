@@ -5,9 +5,13 @@ The cluster provides hosting for a personal memex project as implemented by [mem
 
 ### usage
 
-To initialize the server providing hosting for the Kubernetes cluster, login to the server and run:
+Create AWS EC2 instance with 2 CPU and more than 4 GB of memory.
+
+Create AWS 2 EBS disks of a size appropriate to the volume of entries stored by the memex, say 8 GB. Attach the disks to the EC2 instance.
+
+Initialize the EC2 instance by logging in and running:
 
 * `curl https://raw.githubusercontent.com/matthewjohnson42/k8s-standalone/master/server-init.sh -o ~/server-init.sh`
 * `sudo sh ~/server-init.sh ${USER} ${HOME}`
 
-To update the server, run the scripts titled `build-and-deploy.sh` in the subdirectories of the `kubernetes` directory.
+To update the instance, run the scripts titled `build-and-deploy.sh` in the subdirectories of the `kubernetes` directory.

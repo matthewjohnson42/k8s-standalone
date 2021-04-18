@@ -41,9 +41,6 @@ sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/professional-website/ingress/ingress.yml"
 echo "Waiting 10s for ingress controller to be applied" && sleep 10;
 echo
-echo "[INFO] please pause to open port 443 on the AWS instance"
-read empty
-echo
 echo "[INFO] configuration of microk8s complete"
 echo
 echo "[INFO] kubernetes install complete"

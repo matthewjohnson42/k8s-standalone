@@ -1,5 +1,4 @@
 #! /bin/bash
-set -x
 
 # build script for the different components of the app
 # invokes k8s deploy script after build
