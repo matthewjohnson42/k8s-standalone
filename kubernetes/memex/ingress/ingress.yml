@@ -10,11 +10,11 @@ metadata:
 spec:
   tls:
   - hosts:
-    - memex-service.matthewjohnson42.com
+    - personal-memex-service.matthewjohnson42.com
     - memex.matthewjohnson42.com
     secretName: memex-tls
   rules:
-  - host: memex-service.matthewjohnson42.com
+  - host: personal-memex-service.matthewjohnson42.com
     http:
       paths:
       - path: /
