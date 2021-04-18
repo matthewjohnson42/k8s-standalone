@@ -58,7 +58,7 @@ echo
 echo
 echo "[INFO] beginning deploy to Kubernetes"
 echo
-cd ${USER_HOME}/Workspace/k8s-standalone/kubernetes
+cd ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex
 sh kubernetes-deploy.sh ${USER_HOME}
 echo
 echo "[INFO] deploy to Kubernetes complete"
@@ -67,6 +67,6 @@ echo
 echo
 echo "[INFO] beginning configuration of mongo"
 echo
-cd ${USER_HOME}/Workspace/k8s-standalone/docker/mongo
+cd ${USER_HOME}/Workspace/memex-service/docker/mongo
 cat dbInit.js | sed "s/\${MONGO_DEFAULT_USER_PW}/${MONGO_DEFAULT_USER_PW}/g" > dbInitInterpolated.js
 mongo < dbInitInterpolated.js
