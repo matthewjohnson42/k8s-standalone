@@ -9,6 +9,10 @@
 
 export USER_HOME=$1
 
+echo
+echo "[INFO] ensure that this repo has been updated prior to running this script"
+echo
+
 read -p "Enter kubernetes cluster IP for professional-website (from service-cidr, default 10.152.183.0/24 on microk8s): " PROFESSIONAL_WEBSITE_HOST
 
 rm "${USER_HOME}/deploy_env_vars"
