@@ -8,6 +8,6 @@ spec:
   ports:
     - port: 8088
       targetPort: 80
-  clusterIP: ${WEBSITE_HOST}
+  clusterIP: ${PROFESSIONAL_WEBSITE_HOST}
   selector:
     component: professional-website
