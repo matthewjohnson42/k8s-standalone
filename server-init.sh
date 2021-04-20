@@ -72,30 +72,6 @@ echo "[INFO] disk configuration complete"
 echo
 
 echo
-echo "[INFO] adding scheduled backup of /data/db at 3 AM"
-echo
-ARCHIVE_DIR="${BACKUP_DIR}"
-ARCHIVE_LIMIT=50
-mkdir -p "${ARCHIVE_DIR}"
-
-# crontab entry. runs 3 AM every day. tars and zips the mongo db directory. removes archives in excess of limit.
-echo "* 3 * * *    sudo tar -c ${MONGO_DIR} | gzip > \"${ARCHIVE_DIR}/\$(date +%Y%m%d%H%M%S).tar.gz\"; \
-cd ${ARCHIVE_DIR}; \
-archives=(\$(ls | sort -r)); \
-count=0; \
-while [ \${count} -lt \${#archives[@]} ]; do \
-if [ \${count} -gt ${ARCHIVE_LIMIT} ]; then \
-rm \${archives[\${count}]}; \
-fi; \
-count=\$((\${count}+1)); \
-done" > crontab
-
-crontab crontab
-echo
-echo "[INFO] scheduled backup added"
-echo
-
-echo
 echo "[INFO] beginning setup of dev toolchain"
 echo
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -128,6 +104,25 @@ cd ${USER_HOME}/Workspace/memex-ui
 npm install ng
 echo
 echo "[INFO] setup of app sources complete"
+echo
+
+echo
+echo "[INFO] adding server cron jobs"
+echo
+cd "${USER_HOME}/Workspace/k8s-standalone"
+ARCHIVE_DIR_ESC=$(echo "${BACKUP_DIR}" | sed 's/\//\\\//g')
+MONGO_DIR_ESC=$(echo "${MONGO_DIR}" | sed 's/\//\\\//g')
+USER_HOME_ESC=$(echo "${USER_HOME}" | sed 's/\//\\\//g')
+ARCHIVE_LIMIT=50
+mkdir -p "${ARCHIVE_DIR}"
+mkdir -p "${USER_HOME}/cron"
+cat cron/crontab | sed "s/\${USER_HOME}/${USER_HOME_ESC}/g" > "${USER_HOME}/cron/crontab"
+cat cron/memexDbBackup.sh | sed "s/\${MONGO_DIR}/${MONGO_DIR_ESC}/g" | \
+  sed "s/\${ARCHIVE_DIR}/${ARCHIVE_DIR_ESC}/g" | \
+  sed "s/\${ARCHIVE_LIMIT}/${ARCHIVE_LIMIT}/g" > "${USER_HOME}/cron/memexDbBackup.sh"
+sudo -u ${USER_NAME} crontab "${USER_HOME}/cron/crontab"
+echo
+echo "[INFO] cron jobs added"
 echo
 
 echo
