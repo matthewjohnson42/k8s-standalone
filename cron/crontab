@@ -1,1 +1,1 @@
-* 3 * * *  sudo bash "${USER_HOME}/cron/memexDbBackup.sh" >> "${USER_HOME}/cron/memexDbBackup.log" 2>&1
+

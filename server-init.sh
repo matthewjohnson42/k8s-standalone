@@ -39,30 +39,15 @@ if [ -z "${partition1}" ] && [ -z "${partition2}" ]; then
   mkfs.ext4 /dev/${partition1}
   mkfs.ext4 /dev/${partition2}
 fi
-echo
-read -p "Add backup disk to AWS instance via AWS UI and enter backup disk name: " DISK2_NAME
-partition3=$(ls /dev/ | grep ${DISK2_NAME} | sort | tail -n 1 | grep 'p1$')
-if [ -z "${partition3}" ]; then
-  echo "partitions not found, creating"
-  read -p "Please enter starting memory offset for partition 1 holding mongo (1MB assuming 8 GB disk): " PART3_START
-  read -p "Please enter ending memory offset for partition 1 holding mongo (8195MB assuming 8 GB disk): " PART3_END
-  parted /dev/${DISK2_NAME} mklabel gpt && sleep 1
-  parted /dev/${DISK2_NAME} mkpart data ext4 ${PART3_START} ${PART3_END} && sleep 1
-  partition3=$(ls /dev/ | grep ${DISK2_NAME} | sort | tail -n 1 | grep 'p1$')
-  mkfs.ext4 /dev/${partition3}
-fi
 
 echo
 echo "[INFO] creating mount points and performing mount"
 MONGO_DIR="/data/db"
 ES_DIR="/data/es"
-BACKUP_DIR="/backup/db"
 mkdir -p ${MONGO_DIR}
 mkdir -p ${ES_DIR}
-mkdir -p ${BACKUP_DIR}
 mount /dev/${partition1} ${MONGO_DIR}
 mount /dev/${partition2} ${ES_DIR}
-mount /dev/${partition3} ${BACKUP_DIR}
 
 chmod -R a+rw /data
 chown -R root:root /data
@@ -110,16 +95,9 @@ echo
 echo "[INFO] adding server cron jobs"
 echo
 cd "${USER_HOME}/Workspace/k8s-standalone"
-ARCHIVE_DIR_ESC=$(echo "${BACKUP_DIR}" | sed 's/\//\\\//g')
-MONGO_DIR_ESC=$(echo "${MONGO_DIR}" | sed 's/\//\\\//g')
 USER_HOME_ESC=$(echo "${USER_HOME}" | sed 's/\//\\\//g')
-ARCHIVE_LIMIT=50
-mkdir -p "${ARCHIVE_DIR}"
 mkdir -p "${USER_HOME}/cron"
 cat cron/crontab | sed "s/\${USER_HOME}/${USER_HOME_ESC}/g" > "${USER_HOME}/cron/crontab"
-cat cron/memexDbBackup.sh | sed "s/\${MONGO_DIR}/${MONGO_DIR_ESC}/g" | \
-  sed "s/\${ARCHIVE_DIR}/${ARCHIVE_DIR_ESC}/g" | \
-  sed "s/\${ARCHIVE_LIMIT}/${ARCHIVE_LIMIT}/g" > "${USER_HOME}/cron/memexDbBackup.sh"
 sudo -u ${USER_NAME} crontab "${USER_HOME}/cron/crontab"
 echo
 echo "[INFO] cron jobs added"
