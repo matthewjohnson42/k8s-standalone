@@ -104,6 +104,21 @@ echo "[INFO] cron jobs added"
 echo
 
 echo
+echo "[INFO] starting addition of entries to user home directory"
+echo
+
+if [ -f "${USER_HOME}/.bash_profile" ]; then
+  cat userhome/bash_profile_append >> "${USER_HOME}/.bash_profile"
+fi
+if [ -f "${USER_HOME}/.bashrc" ]; then
+  cat userhome/bash_profile_append >> "${USER_HOME}/.bashrc"
+fi
+
+echo
+echo "[INFO] addition of entries to user home directory complete"
+echo
+
+echo
 echo "[INFO] starting setup of Kubernetes"
 echo
 cd ${USER_HOME}/Workspace/k8s-standalone
