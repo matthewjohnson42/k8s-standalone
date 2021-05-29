@@ -1,12 +1,12 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: professional-website
 spec:
   selector:
     matchLabels:
       component: professional-website
-  serviceName: professional-website
+#  serviceName: professional-website
   template:
     metadata:
       labels:
