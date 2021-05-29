@@ -1,12 +1,12 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: memex-ui
 spec:
   selector:
     matchLabels:
       component: memex-ui
-  serviceName: memex-ui
+#  serviceName: memex-ui
   template:
     metadata:
       labels:

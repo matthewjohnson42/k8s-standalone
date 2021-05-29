@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: memex-service
   labels:
@@ -8,7 +8,7 @@ spec:
   selector:
     matchLabels:
       component: memex-service
-  serviceName: memex-service-svc
+#  serviceName: memex-service-svc
   template:
     metadata:
       name: memex-service
