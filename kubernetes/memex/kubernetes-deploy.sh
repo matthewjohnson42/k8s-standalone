@@ -70,14 +70,14 @@ sleep 15
 echo
 echo "[INFO] beginning deploy of service and UI"
 echo
-kubectl delete statefulset/memex-service
-kubectl rollout status -w statefulset/memex-service
-kubectl delete statefulset/memex-ui
-kubectl rollout status -w statefulset/memex-ui
+kubectl delete deployment/memex-service
+kubectl rollout status -w deployment/memex-service
+kubectl delete deployment/memex-ui
+kubectl rollout status -w deployment/memex-ui
 kubectl apply -f service/interpolated-service-deploy.yml
 kubectl apply -f ui/ui-deploy.yml
-kubectl rollout status -w statefulset/memex-service
-kubectl rollout status -w statefulset/memex-ui
+kubectl rollout status -w deployment/memex-service
+kubectl rollout status -w deployment/memex-ui
 echo
 echo "[INFO] deploy of service and UI complete"
 echo

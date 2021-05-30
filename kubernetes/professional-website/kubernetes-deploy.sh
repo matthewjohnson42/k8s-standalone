@@ -26,10 +26,10 @@ echo "[INFO] application of k8s service complete"
 echo
 echo "[INFO] beginning deploy of professional-website"
 echo
-kubectl delete statefulset/professional-website
-kubectl rollout status -w statefulset/professional-website
+kubectl delete deployment/professional-website
+kubectl rollout status -w deployment/professional-website
 kubectl apply -f professional-website-deploy.yml
-kubectl rollout status -w statefulset/professional-website
+kubectl rollout status -w deployment/professional-website
 echo
 echo "[INFO] deploy of professional-website complete"
 echo

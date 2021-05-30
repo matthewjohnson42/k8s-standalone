@@ -6,7 +6,6 @@ spec:
   selector:
     matchLabels:
       component: professional-website
-#  serviceName: professional-website
   template:
     metadata:
       labels:

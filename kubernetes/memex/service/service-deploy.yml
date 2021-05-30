@@ -8,7 +8,6 @@ spec:
   selector:
     matchLabels:
       component: memex-service
-#  serviceName: memex-service-svc
   template:
     metadata:
       name: memex-service
