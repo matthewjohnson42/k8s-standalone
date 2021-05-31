@@ -43,9 +43,9 @@ cat service/service-meta.yml | sed "s/\${MEMEX_HOST}/${MEMEX_HOST}/g" > service/
 cat service/service-deploy.yml | sed "s/\${TOKEN_ENC_KEY_SECRET}/${TOKEN_ENC_KEY_SECRET}/g" | \
   sed "s/\${USERPASS_ENC_KEY_SECRET}/${USERPASS_ENC_KEY_SECRET}/g" | sed "s/\${MEMEX_HOST}/${MEMEX_HOST}/g" | \
   sed "s/\${MONGO_HOST}/${MONGO_HOST}/g" | sed "s/\${ELASTICSEARCH_HOST}/${ELASTICSEARCH_HOST}/g" | \
-  sed "s/\${MEMEX_SERVICE_DOCKER_IMAGE_AND_TAG}/${MEMEX_SERVICE_DOCKER_IMAGE_AND_TAG}/" > service/interpolated-service-deploy.yml
+  sed "s+\${MEMEX_SERVICE_DOCKER_IMAGE_AND_TAG}+${MEMEX_SERVICE_DOCKER_IMAGE_AND_TAG}+" > service/interpolated-service-deploy.yml
 cat ui/ui-meta.yml | sed "s/\${UI_HOST}/${UI_HOST}/g" | \
-  sed "s/\${MEMEX_UI_DOCKER_IMAGE_AND_TAG}/${MEMEX_UI_DOCKER_IMAGE_AND_TAG}/g" > ui/interpolated-ui-meta.yml
+  sed "s+\${MEMEX_UI_DOCKER_IMAGE_AND_TAG}+${MEMEX_UI_DOCKER_IMAGE_AND_TAG}+g" > ui/interpolated-ui-meta.yml
 
 echo
 echo "[INFO] adding configurations for mongo, elasticsearch, memex-service, and memex-ui"
