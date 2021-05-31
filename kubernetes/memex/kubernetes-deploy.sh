@@ -44,8 +44,8 @@ cat service/service-deploy.yml | sed "s/\${TOKEN_ENC_KEY_SECRET}/${TOKEN_ENC_KEY
   sed "s/\${USERPASS_ENC_KEY_SECRET}/${USERPASS_ENC_KEY_SECRET}/g" | sed "s/\${MEMEX_HOST}/${MEMEX_HOST}/g" | \
   sed "s/\${MONGO_HOST}/${MONGO_HOST}/g" | sed "s/\${ELASTICSEARCH_HOST}/${ELASTICSEARCH_HOST}/g" | \
   sed "s+\${MEMEX_SERVICE_DOCKER_IMAGE_AND_TAG}+${MEMEX_SERVICE_DOCKER_IMAGE_AND_TAG}+" > service/interpolated-service-deploy.yml
-cat ui/ui-meta.yml | sed "s/\${UI_HOST}/${UI_HOST}/g" | \
-  sed "s+\${MEMEX_UI_DOCKER_IMAGE_AND_TAG}+${MEMEX_UI_DOCKER_IMAGE_AND_TAG}+g" > ui/interpolated-ui-meta.yml
+cat ui/ui-meta.yml | sed "s/\${UI_HOST}/${UI_HOST}/g" > ui/interpolated-ui-meta.yml
+cat ui/ui-deploy.yml | sed "s+\${MEMEX_UI_DOCKER_IMAGE_AND_TAG}+${MEMEX_UI_DOCKER_IMAGE_AND_TAG}+g" > ui/interpolated-ui-deploy.yml
 
 echo
 echo "[INFO] adding configurations for mongo, elasticsearch, memex-service, and memex-ui"
@@ -82,7 +82,7 @@ kubectl rollout status -w deployment/memex-service
 kubectl delete deployment/memex-ui
 kubectl rollout status -w deployment/memex-ui
 kubectl apply -f service/interpolated-service-deploy.yml
-kubectl apply -f ui/ui-deploy.yml
+kubectl apply -f ui/interpolated-ui-deploy.yml
 kubectl rollout status -w deployment/memex-service
 kubectl rollout status -w deployment/memex-ui
 echo
