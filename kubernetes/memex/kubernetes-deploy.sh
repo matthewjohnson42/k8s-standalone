@@ -17,6 +17,10 @@ if [ ! -e "${USER_HOME}/deploy_env_vars" ]; then
   read -p "Enter kubernetes cluster IP for the memex-ui (from service-cidr, default 10.152.183.0/24 on microk8s): " UI_HOST
   read -p "Enter encryption key secret for JWT encryption: " TOKEN_ENC_KEY_SECRET
   read -p "Enter encryption key secret for encryption of users' passwords: " USERPASS_ENC_KEY_SECRET
+  MEMEX_SERVICE_DOCKER_IMAGE_AND_TAG=$(docker images --filter "dangling=false" --format '{{.Repository}}:{{.Tag}}' | grep memex-service | head -n 1)
+  echo "Attempting to deploy from latest docker image for memex-service with name and tag '${MEMEX_SERVICE_DOCKER_IMAGE_AND_TAG}'"
+  MEMEX_UI_DOCKER_IMAGE_AND_TAG=$(docker images --filter "dangling=false" --format '{{.Repository}}:{{.Tag}}' | grep memex-ui | head -n 1)
+  echo "Attempting to deploy from latest docker image for memex-ui with name and tag '${MEMEX_UI_DOCKER_IMAGE_AND_TAG}'"
 else
   ELASTICSEARCH_HOST=$(cat "${USER_HOME}/deploy_env_vars" | grep 'ELASTICSEARCH_HOST' | sed 's/ELASTICSEARCH_HOST=//g')
   MONGO_HOST=$(cat "${USER_HOME}/deploy_env_vars" | grep 'MONGO_HOST' | sed 's/MONGO_HOST=//g')
@@ -24,6 +28,8 @@ else
   UI_HOST=$(cat "${USER_HOME}/deploy_env_vars" | grep 'UI_HOST' | sed 's/UI_HOST=//g')
   TOKEN_ENC_KEY_SECRET=$(cat "${USER_HOME}/deploy_env_vars" | grep 'TOKEN_ENC_KEY_SECRET' | sed 's/TOKEN_ENC_KEY_SECRET=//g')
   USERPASS_ENC_KEY_SECRET=$(cat "${USER_HOME}/deploy_env_vars" | grep 'USERPASS_ENC_KEY_SECRET' | sed 's/USERPASS_ENC_KEY_SECRET=//g')
+  MEMEX_SERVICE_DOCKER_IMAGE_AND_TAG=$(cat "${USER_HOME}/deploy_env_vars" | grep 'MEMEX_SERVICE_DOCKER_IMAGE_AND_TAG' | sed 's/MEMEX_SERVICE_DOCKER_IMAGE_AND_TAG=//g')
+  MEMEX_UI_DOCKER_IMAGE_AND_TAG=$(cat "${USER_HOME}/deploy_env_vars" | grep 'MEMEX_UI_DOCKER_IMAGE_AND_TAG' | sed 's/MEMEX_UI_DOCKER_IMAGE_AND_TAG=//g')
 fi
 
 echo
@@ -36,9 +42,10 @@ cat elasticsearch/es-meta.yml | sed "s/\${ELASTICSEARCH_HOST}/${ELASTICSEARCH_HO
 cat service/service-meta.yml | sed "s/\${MEMEX_HOST}/${MEMEX_HOST}/g" > service/interpolated-service-meta.yml
 cat service/service-deploy.yml | sed "s/\${TOKEN_ENC_KEY_SECRET}/${TOKEN_ENC_KEY_SECRET}/g" | \
   sed "s/\${USERPASS_ENC_KEY_SECRET}/${USERPASS_ENC_KEY_SECRET}/g" | sed "s/\${MEMEX_HOST}/${MEMEX_HOST}/g" | \
-  sed "s/\${MONGO_HOST}/${MONGO_HOST}/g" | sed "s/\${ELASTICSEARCH_HOST}/${ELASTICSEARCH_HOST}/g" > \
-  service/interpolated-service-deploy.yml
-cat ui/ui-meta.yml | sed "s/\${UI_HOST}/${UI_HOST}/g" > ui/interpolated-ui-meta.yml
+  sed "s/\${MONGO_HOST}/${MONGO_HOST}/g" | sed "s/\${ELASTICSEARCH_HOST}/${ELASTICSEARCH_HOST}/g" | \
+  sed "s/\${MEMEX_SERVICE_DOCKER_IMAGE_AND_TAG}/${MEMEX_SERVICE_DOCKER_IMAGE_AND_TAG}/" > service/interpolated-service-deploy.yml
+cat ui/ui-meta.yml | sed "s/\${UI_HOST}/${UI_HOST}/g" | \
+  sed "s/\${MEMEX_UI_DOCKER_IMAGE_AND_TAG}/${MEMEX_UI_DOCKER_IMAGE_AND_TAG}/g" > ui/interpolated-ui-meta.yml
 
 echo
 echo "[INFO] adding configurations for mongo, elasticsearch, memex-service, and memex-ui"

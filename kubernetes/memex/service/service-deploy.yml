@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: memex-service
-        image: localhost:32000/memex-service:1.0.0
+        image: ${MEMEX_SERVICE_DOCKER_IMAGE_AND_TAG}
         imagePullPolicy: Always
         env:
         - name: "SPRING_PROFILES_ACTIVE"

@@ -39,8 +39,10 @@ git checkout origin/master
 # copy of content from docker/docker-compose-up.sh
 # content here references docker internal to minikube, allowing for minikube to reference the built images
 mvn clean install -f app/pom.xml
-docker build --tag localhost:32000/memex-service:1.0.0 --file docker/app/Dockerfile .
-docker push localhost:32000/memex-service:1.0.0
+MEMEX_SERVICE_DOCKER_IMAGE_AND_TAG="localhost:32000/memex-service:$(mvn -Dexec.args='${project.version}' -Dexec.executable=echo exec:exec -q --non-recursive)"
+docker build --tag "${MEMEX_SERVICE_DOCKER_IMAGE_AND_TAG}" --file docker/app/Dockerfile .
+docker push "${MEMEX_SERVICE_DOCKER_IMAGE_AND_TAG}"
+echo "MEMEX_SERVICE_DOCKER_IMAGE_AND_TAG=${MEMEX_SERVICE_DOCKER_IMAGE_AND_TAG}" >> "${USER_HOME}/deploy_env_vars"
 cd ${USER_HOME}/Workspace/memex-ui
 git reset HEAD --hard
 git fetch origin
@@ -51,8 +53,10 @@ mv src/assets/config.json src/assets/config.json.bak
 mv src/assets/prod.json src/assets/config.json
 npm install
 npm run ng -- build
-docker build --tag localhost:32000/memex-ui:0.0.1 -f docker/Dockerfile .
-docker push localhost:32000/memex-ui:0.0.1
+MEMEX_UI_DOCKER_IMAGE_AND_TAG="localhost:32000/memex-ui:$(node -p "require('./package.json').version")"
+docker build --tag "${MEMEX_UI_DOCKER_IMAGE_AND_TAG}" -f docker/Dockerfile .
+docker push "${MEMEX_UI_DOCKER_IMAGE_AND_TAG}"
+echo "MEMEX_UI_DOCKER_IMAGE_AND_TAG=${MEMEX_UI_DOCKER_IMAGE_AND_TAG}" >> "${USER_HOME}/deploy_env_vars"
 
 echo
 echo "[INFO] build of docker containers complete"
