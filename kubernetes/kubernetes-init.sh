@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # installs the container orchestration system (kubernetes on containerd)
-# invoked from server-init.sh
+# usage, as default user:
+# cd ~/Workspace/k8s-standalone
+# sudo sh kubernetes/kubernetes-init.sh ${USER} ${HOME}
 
 USER_NAME=$1
 USER_HOME=$2
@@ -11,9 +13,9 @@ echo "[INFO] starting install of kubernetes as microk8s"
 echo
 # install microk8s to allow for kubernetes master (control plane) and slave (node) on a single host
 # microk8s=1.20 has same transitive dependency, containerd=1.3.7, as docker=19.0.13
-sudo -u "${USER_NAME}" -g docker bash -c 'sudo snap install --classic --channel=1.20/stable microk8s'
-GROUPS_CMD_STRING="$(groups ${USER_NAME} | sed "s/${USER_NAME}.*:\s*//" | sed 's/\s\+/,/g'),microk8s"
-usermod -G "${GROUPS_CMD_STRING}" "${USER_NAME}"
+#sudo -u "${USER_NAME}" -g docker bash -c 'sudo snap install --classic --channel=1.20/stable microk8s'
+sudo -u "${USER_NAME}" -g docker bash -c 'sudo snap install --classic microk8s'
+usermod -aG "microk8s" "${USER_NAME}"
 echo
 echo "[INFO] beginning configuration of microk8s"
 echo
