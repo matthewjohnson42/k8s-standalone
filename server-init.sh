@@ -125,6 +125,6 @@ echo
 echo "[INFO] the current user session should be terminated, and a new session started. this will update user permissions."
 echo "[INFO] following re-login, the following command should be run to initialize the kubernetes cluster on the instance:"
 echo
-echp "cd ~/Workspace/k8s-standalone"
+echo "cd ~/Workspace/k8s-standalone"
 echo "sudo sh kubernetes/kubernetes-init.sh \${USER} \${HOME}"
 echo

@@ -29,12 +29,14 @@ cat << _EOF > "${USER_HOME}/daemon.json"
 _EOF
 mv "${USER_HOME}/daemon.json" /etc/docker/daemon.json
 systemctl restart docker
+microk8s enable registry
+microk8s enable ingress
 # add ingress/tls pre-req to kubernetes
-sudo -u "${USER_NAME}" -g docker bash -c 'microk8s kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.3.0/cert-manager.yaml'
+sudo -u "${USER_NAME}" -g docker bash -c 'microk8s kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.16.3/cert-manager.yaml'
 echo "Waiting 30s for cert-manager containers to be applied" && sleep 30;
-curl -L -o kubectl-cert-manager.tar.gz https://github.com/jetstack/cert-manager/releases/download/v1.3.0/kubectl-cert_manager-linux-amd64.tar.gz
-tar xzf kubectl-cert-manager.tar.gz
-sudo mv kubectl-cert_manager /usr/local/bin
+#curl -L -o kubectl-cert-manager.tar.gz https://github.com/jetstack/cert-manager/releases/download/v1.3.0/kubectl-cert_manager-linux-amd64.tar.gz
+#tar xzf kubectl-cert-manager.tar.gz
+#sudo mv kubectl-cert_manager /usr/local/bin
 # add ingress/tls
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/ingress/ingress-meta.yml"
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/professional-website/ingress/ingress-meta.yml"
