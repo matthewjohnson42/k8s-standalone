@@ -5,9 +5,11 @@ The cluster provides hosting for a personal memex project as implemented by [mem
 
 ### usage
 
-Create AWS EC2 instance with 2 CPU and more than 4 GB of memory.
+Create AWS EC2 instance with 2 CPU and 8 GB of memory.
 
 Create AWS 2 EBS disks of a size appropriate to the volume of entries stored by the memex, say 8 GB. Attach the disks to the EC2 instance.
+
+Ensure that the AWS EC2 instance has an associated VPC and security group exposing ports 22, 80, 443, and 8544 on both IPv4 and IPv6.
 
 Initialize the EC2 instance by logging in and running:
 
