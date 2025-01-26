@@ -38,12 +38,6 @@ echo "Waiting 30s for cert-manager containers to be applied" && sleep 30;
 #tar xzf kubectl-cert-manager.tar.gz
 #sudo mv kubectl-cert_manager /usr/local/bin
 # add ingress/tls
-sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/ingress/ingress-meta.yml"
-sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/professional-website/ingress/ingress-meta.yml"
-echo "Waiting 10s for ingress metadata to be applied" && sleep 10;
-sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/ingress/ingress.yml"
-sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/professional-website/ingress/ingress.yml"
-echo "Waiting 10s for ingress controller to be applied" && sleep 10;
 echo
 echo "[INFO] configuration of microk8s complete"
 echo

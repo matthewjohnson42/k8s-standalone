@@ -2,8 +2,8 @@
 # usage: no args, requires kubernetes configuration for user (.kube typically)
 # assumes directory of execution is memex-server/kubernetes
 
-USER_HOME=$1
-alias kubectl="microk8s kubectl"
+export USER_NAME=$1
+export USER_HOME=$2
 
 for stdOutElement in $(kubectl get nodes | grep "Ready"); do
   NODE_NAME=${stdOutElement}
@@ -47,26 +47,36 @@ cat service/service-deploy.yml | sed "s/\${TOKEN_ENC_KEY_SECRET}/${TOKEN_ENC_KEY
 cat ui/ui-meta.yml | sed "s/\${UI_HOST}/${UI_HOST}/g" > ui/interpolated-ui-meta.yml
 cat ui/ui-deploy.yml | sed "s+\${MEMEX_UI_DOCKER_IMAGE_AND_TAG}+${MEMEX_UI_DOCKER_IMAGE_AND_TAG}+g" > ui/interpolated-ui-deploy.yml
 
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/ingress/ingress-meta.yml"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/ingress/ingress.yml"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete secret memex-tls letsencrypt-memex"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/ingress/ingress-meta.yml"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/ingress/ingress.yml"
+echo "Waiting 60s for ingress metadata to be applied" && sleep 60;
+
 echo
 echo "[INFO] adding configurations for mongo, elasticsearch, memex-service, and memex-ui"
 echo
-kubectl apply -f mongo/interpolated-mongo-meta.yml
-kubectl apply -f elasticsearch/interpolated-es-meta.yml
-kubectl apply -f service/interpolated-service-meta.yml
-kubectl apply -f ui/interpolated-ui-meta.yml
-kubectl apply -f ingress/ingress.yml
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/mongo/interpolated-mongo-meta.yml"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/elasticsearch/interpolated-es-meta.yml"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/service/interpolated-service-meta.yml"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/ui/interpolated-ui-meta.yml"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/mongo/interpolated-mongo-meta.yml"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/elasticsearch/interpolated-es-meta.yml"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/service/interpolated-service-meta.yml"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/ui/interpolated-ui-meta.yml"
 
 echo
 echo "[INFO] beginning deploy of mongo and elasticsearch"
 echo
-kubectl delete statefulset/memex-mongo
-kubectl rollout status -w statefulset/memex-mongo
-kubectl delete statefulset/memex-elasticsearch
-kubectl rollout status -w statefulset/memex-elasticsearch
-kubectl apply -f mongo/mongo-deploy.yml
-kubectl apply -f elasticsearch/es-deploy.yml
-kubectl rollout status -w statefulset/memex-mongo
-kubectl rollout status -w statefulset/memex-elasticsearch
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete statefulset/memex-mongo"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl rollout status -w statefulset/memex-mongo"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete statefulset/memex-elasticsearch"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl rollout status -w statefulset/memex-elasticsearch"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/mongo/mongo-deploy.yml"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/elasticsearch/es-deploy.yml"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl rollout status -w statefulset/memex-mongo"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl rollout status -w statefulset/memex-elasticsearch"
 echo
 echo "[INFO] deploy of mongo and elasticsearch complete"
 echo
@@ -77,14 +87,14 @@ sleep 15
 echo
 echo "[INFO] beginning deploy of service and UI"
 echo
-kubectl delete deployment/memex-service
-kubectl rollout status -w deployment/memex-service
-kubectl delete deployment/memex-ui
-kubectl rollout status -w deployment/memex-ui
-kubectl apply -f service/interpolated-service-deploy.yml
-kubectl apply -f ui/interpolated-ui-deploy.yml
-kubectl rollout status -w deployment/memex-service
-kubectl rollout status -w deployment/memex-ui
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete deployment/memex-service"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl rollout status -w deployment/memex-service"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete deployment/memex-ui"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl rollout status -w deployment/memex-ui"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/service/interpolated-service-deploy.yml"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/ui/interpolated-ui-deploy.yml"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl rollout status -w deployment/memex-service"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl rollout status -w deployment/memex-ui"
 echo
 echo "[INFO] deploy of service and UI complete"
 echo

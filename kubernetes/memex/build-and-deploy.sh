@@ -4,10 +4,11 @@
 # invokes k8s deploy script after build
 
 # note: requires root user permissions
-# usage: as default user, `sudo sh build-and-deploy.sh ${HOME}`
+# usage: as default user, `sudo sh build-and-deploy.sh ${USER} ${HOME}`
 # usage: as root (IE, using sudo), `sh build-and-deploy.sh <default-user-home-directory>`
 
-export USER_HOME=$1
+export USER_NAME=$1
+export USER_HOME=$2
 
 echo
 echo "[INFO] ensure that this repo has been updated prior to running this script"
@@ -66,7 +67,7 @@ echo
 echo "[INFO] beginning deploy to Kubernetes"
 echo
 cd ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex
-sh kubernetes-deploy.sh ${USER_HOME}
+sh kubernetes-deploy.sh ${USER_NAME} ${USER_HOME}
 echo
 echo "[INFO] deploy to Kubernetes complete"
 echo
