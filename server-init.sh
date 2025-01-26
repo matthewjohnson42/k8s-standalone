@@ -65,15 +65,15 @@ sudo add-apt-repository \
    $(lsb_release -cs) \
    stable"
 apt-get update
-# docker 19.0.13 depends on containerd 1.3.7, consistent with microk8s 1.20
-apt-get install -y npm maven mongodb-clients docker-ce=5:19.03.13~3-0~ubuntu-focal
+apt-get install -y npm maven docker.io
+curl https://downloads.mongodb.com/compass/mongodb-mongosh_2.2.12_amd64.deb -o mongodb-mongosh_2.2.12_amd64.deb
+dpkg -i mongodb-mongosh_2.2.12_amd64.deb
 # set docker daemon to start on boot, restart daemon to load config. note docker configs exist in kubernetes-init.sh
 systemctl enable docker
 # add user to the docker user group.
 # allows access to the docker daemon via docker unix socket, accessed by the `docker` cmd line util.
-GROUPS_CMD_STRING="$(groups ${USER_NAME} | sed "s/${USER_NAME}.*:\s*//" | sed 's/\s\+/,/g'),docker"
-usermod -g docker ${USER_NAME}
-usermod -G ${GROUPS_CMD_STRING} ${USER_NAME}
+# requires new user session
+usermod -aG docker ${USER_NAME}
 echo
 echo "[INFO] dev toolchain setup complete"
 echo
@@ -110,6 +110,7 @@ echo
 if [ -f "${USER_HOME}/.bash_profile" ]; then
   cat userhome/bash_profile_append >> "${USER_HOME}/.bash_profile"
 fi
+
 if [ -f "${USER_HOME}/.bashrc" ]; then
   cat userhome/bash_profile_append >> "${USER_HOME}/.bashrc"
 fi
@@ -119,16 +120,11 @@ echo "[INFO] addition of entries to user home directory complete"
 echo
 
 echo
-echo "[INFO] starting setup of Kubernetes"
-echo
-cd ${USER_HOME}/Workspace/k8s-standalone
-sh kubernetes/kubernetes-init.sh ${USER_NAME} ${USER_HOME}
-echo
-echo "[INFO] Kubernetes setup complete"
-echo
-
-echo
 echo "[INFO] server initialization complete."
 echo
-echo "[INFO] deploy of apps can be accomplished by running the build-and-deploy.sh scripts in the k8s-standalone repository that has been cloned into ${USER_HOME}/Workspace"
+echo "[INFO] the current user session should be terminated, and a new session started. this will update user permissions."
+echo "[INFO] following re-login, the following command should be run to initialize the kubernetes cluster on the instance:"
+echo
+echp "cd ~/Workspace/k8s-standalone"
+echo "sudo sh kubernetes/kubernetes-init.sh \${USER} \${HOME}"
 echo
