@@ -4,10 +4,11 @@
 # invokes k8s deploy script after build
 
 # note: requires root user permissions
-# usage: as default user, `sudo sh build-and-deploy.sh ${HOME}`
-# usage: as root (IE, using sudo), `sh build-and-deploy.sh <default-user-home-directory>`
+# usage: as default user, `sudo sh build-and-deploy.sh ${USER} ${HOME}`
+# usage: as root (IE, using sudo), `sh build-and-deploy.sh <default-user-name> <default-user-home-directory>`
 
-export USER_HOME=$1
+export USER_NAME=$1
+export USER_HOME=$2
 
 echo
 echo "[INFO] ensure that this repo has been updated prior to running this script"
