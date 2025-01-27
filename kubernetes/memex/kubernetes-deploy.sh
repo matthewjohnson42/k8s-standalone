@@ -47,32 +47,31 @@ cat service/service-deploy.yml | sed "s/\${TOKEN_ENC_KEY_SECRET}/${TOKEN_ENC_KEY
 cat ui/ui-meta.yml | sed "s/\${UI_HOST}/${UI_HOST}/g" > ui/interpolated-ui-meta.yml
 cat ui/ui-deploy.yml | sed "s+\${MEMEX_UI_DOCKER_IMAGE_AND_TAG}+${MEMEX_UI_DOCKER_IMAGE_AND_TAG}+g" > ui/interpolated-ui-deploy.yml
 
+echo
+echo "[INFO] deleteing existing k8s CRDs"
+echo
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/ingress/ingress-meta.yml"
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/ingress/ingress.yml"
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete secret memex-tls letsencrypt-memex"
-sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/ingress/ingress-meta.yml"
-sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/ingress/ingress.yml"
-echo "Waiting 60s for ingress metadata to be applied" && sleep 60;
-
-echo
-echo "[INFO] adding configurations for mongo, elasticsearch, memex-service, and memex-ui"
-echo
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/mongo/interpolated-mongo-meta.yml"
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/elasticsearch/interpolated-es-meta.yml"
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/service/interpolated-service-meta.yml"
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/ui/interpolated-ui-meta.yml"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete deployment/memex-service"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete deployment/memex-ui"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete statefulset/memex-mongo"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete statefulset/memex-elasticsearch"
+
+echo
+echo "[INFO] adding configurations for mongo, elasticsearch, memex-service, and memex-ui"
+echo
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/mongo/interpolated-mongo-meta.yml"
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/elasticsearch/interpolated-es-meta.yml"
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/service/interpolated-service-meta.yml"
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/ui/interpolated-ui-meta.yml"
-
 echo
 echo "[INFO] beginning deploy of mongo and elasticsearch"
 echo
-sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete statefulset/memex-mongo"
-sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl rollout status -w statefulset/memex-mongo"
-sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete statefulset/memex-elasticsearch"
-sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl rollout status -w statefulset/memex-elasticsearch"
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/mongo/mongo-deploy.yml"
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/elasticsearch/es-deploy.yml"
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl rollout status -w statefulset/memex-mongo"
@@ -80,17 +79,15 @@ sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl rollout status -w sta
 echo
 echo "[INFO] deploy of mongo and elasticsearch complete"
 echo
-echo "[INFO] pausing to allow for elastic initialization"
+echo "[INFO] Waiting 30s to allow for elastic initialization"
 echo
-sleep 15
-
+sleep 30
 echo
 echo "[INFO] beginning deploy of service and UI"
 echo
-sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete deployment/memex-service"
-sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl rollout status -w deployment/memex-service"
-sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete deployment/memex-ui"
-sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl rollout status -w deployment/memex-ui"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/ingress/ingress-meta.yml"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/ingress/ingress.yml"
+echo "Waiting 60s for ingress metadata to be applied" && sleep 60;
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/service/interpolated-service-deploy.yml"
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/ui/interpolated-ui-deploy.yml"
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl rollout status -w deployment/memex-service"
