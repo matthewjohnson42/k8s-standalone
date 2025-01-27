@@ -86,8 +86,9 @@ echo
 echo "[INFO] beginning deploy of service and UI"
 echo
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/ingress/ingress-meta.yml"
-sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/ingress/ingress.yml"
 echo "Waiting 60s for ingress metadata to be applied" && sleep 60;
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/ingress/ingress.yml"
+echo "Waiting 60s for ingress to be applied" && sleep 60;
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/service/interpolated-service-deploy.yml"
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/memex/ui/interpolated-ui-deploy.yml"
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl rollout status -w deployment/memex-service"

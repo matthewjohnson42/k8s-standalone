@@ -30,8 +30,9 @@ echo
 echo "[INFO] applying k8s CRDs for professional-website"
 echo
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/professional-website/ingress/ingress-meta.yml"
+echo "Waiting 60s for ingress metadata to be applied" && sleep 60;
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/professional-website/ingress/ingress.yml"
-echo "Waiting 60s for ingress controller to be applied" && sleep 60;
+echo "Waiting 60s for ingress to be applied" && sleep 60;
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/professional-website/interpolated-professional-website-meta.yml"
 echo
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/professional-website/professional-website-deploy.yml"
