@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: professional-website-ingress
   annotations:
-    cert-manager.io/clusterissuer: "letsencrypt-professional-website"
+    cert-manager.io/cluster-issuer: "letsencrypt-professional-website"
     acme.cert-manager.io/http01-edit-in-place: "true"
   labels:
     component: ingress
