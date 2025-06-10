@@ -15,7 +15,7 @@ fi
 echo
 echo "[INFO] interpolating Kubernetes configuration files in ${PWD}"
 echo
-cat professional-website-meta.yml | sed "s/\${PROFESSIONAL_WEBSITE_HOST}/${PROFESSIONAL_WEBSITE_HOST}/g" > \
+cat professional-website-meta.yml | sed "s/\${PROFESSIONAL_WEBSITE_HOST}/$(echo ${PROFESSIONAL_WEBSITE_HOST} | sed 's/\//\\\//')/g" > \
   interpolated-professional-website-meta.yml
 
 echo
