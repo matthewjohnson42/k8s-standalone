@@ -82,8 +82,8 @@ echo
 mkdir ${USER_HOME}/Workspace/
 cd ${USER_HOME}/Workspace
 git clone https://github.com/matthewjohnson42/k8s-standalone.git
-git clone https://github.com/matthewjohnson42/memex-service.git
-git clone https://github.com/matthewjohnson42/memex-ui.git
+# git clone https://github.com/matthewjohnson42/memex-service.git
+# git clone https://github.com/matthewjohnson42/memex-ui.git
 git clone https://github.com/matthewjohnson42/professional-website.git
 cd ${USER_HOME}/Workspace/memex-ui
 npm install ng
