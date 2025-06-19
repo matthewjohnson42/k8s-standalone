@@ -13,8 +13,6 @@ The host configuration is bound with the deploy scripts, and so the deploy scrip
 
 ### usage
 
-~~Create AWS EC2 instance with 2 CPU and 8 GB of memory.~~
-
 Create AWS EC2 instance with 2 CPU and 4 GB of memory.
 
 Create AWS 2 EBS disks of a size appropriate to the volume of entries stored by the memex, say 8 GB. Attach the disks to the EC2 instance.
