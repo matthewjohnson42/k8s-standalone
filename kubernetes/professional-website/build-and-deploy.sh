@@ -37,7 +37,7 @@ echo
 echo
 echo "[INFO] beginning deploy to Kubernetes"
 echo
-cd ${USER_HOME}/Workspace/k8s-standalone/kubernetes/professional-website
+cd ${USER_HOME}/Workspace/kubernetes-standalone/kubernetes/professional-website
 sh kubernetes-deploy.sh ${USER_NAME} ${USER_HOME}
 echo
 echo "[INFO] deploy to Kubernetes complete"

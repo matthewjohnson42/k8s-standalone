@@ -2,7 +2,7 @@
 
 # installs the container orchestration system (kubernetes on containerd)
 # usage, as default user:
-# cd ~/Workspace/k8s-standalone
+# cd ~/Workspace/kubernetes-standalone
 # sudo sh kubernetes/kubernetes-init.sh ${USER} ${HOME}
 
 USER_NAME=$1

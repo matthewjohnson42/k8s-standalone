@@ -21,21 +21,21 @@ cat professional-website-meta.yml | sed "s/\${PROFESSIONAL_WEBSITE_HOST}/$(echo 
 echo
 echo "[INFO] deleting existing k8s CRDs for professional-website"
 echo
-sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/professional-website/ingress/ingress-meta.yml"
-sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/professional-website/ingress/ingress.yml"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete -f ${USER_HOME}/Workspace/kubernetes-standalone/kubernetes/professional-website/ingress/ingress-meta.yml"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete -f ${USER_HOME}/Workspace/kubernetes-standalone/kubernetes/professional-website/ingress/ingress.yml"
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete secret website-tls letsencrypt-professional-website"
-sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/professional-website/interpolated-professional-website-meta.yml"
-sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/professional-website/professional-website-deploy.yml"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete -f ${USER_HOME}/Workspace/kubernetes-standalone/kubernetes/professional-website/interpolated-professional-website-meta.yml"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl delete -f ${USER_HOME}/Workspace/kubernetes-standalone/kubernetes/professional-website/professional-website-deploy.yml"
 echo
 echo "[INFO] applying k8s CRDs for professional-website"
 echo
-sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/professional-website/ingress/ingress-meta.yml"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/kubernetes-standalone/kubernetes/professional-website/ingress/ingress-meta.yml"
 echo "Waiting 60s for ingress metadata to be applied" && sleep 60;
-sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/professional-website/ingress/ingress.yml"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/kubernetes-standalone/kubernetes/professional-website/ingress/ingress.yml"
 echo "Waiting 60s for ingress to be applied" && sleep 60;
-sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/professional-website/interpolated-professional-website-meta.yml"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/kubernetes-standalone/kubernetes/professional-website/interpolated-professional-website-meta.yml"
 echo
-sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/k8s-standalone/kubernetes/professional-website/professional-website-deploy.yml"
+sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl apply -f ${USER_HOME}/Workspace/kubernetes-standalone/kubernetes/professional-website/professional-website-deploy.yml"
 sudo -u "${USER_NAME}" -g docker bash -c "microk8s kubectl rollout status -w deployment/professional-website"
 echo
 echo "[INFO] deploy of professional-website complete"

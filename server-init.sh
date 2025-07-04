@@ -81,7 +81,7 @@ echo "[INFO] beginning setup of app sources"
 echo
 mkdir ${USER_HOME}/Workspace/
 cd ${USER_HOME}/Workspace
-git clone https://github.com/matthewjohnson42/k8s-standalone.git
+git clone https://github.com/matthewjohnson42/kubernetes-standalone.git
 # git clone https://github.com/matthewjohnson42/memex-service.git
 # git clone https://github.com/matthewjohnson42/memex-ui.git
 git clone https://github.com/matthewjohnson42/professional-website.git
@@ -94,7 +94,7 @@ echo
 echo
 echo "[INFO] adding server cron jobs"
 echo
-cd "${USER_HOME}/Workspace/k8s-standalone"
+cd "${USER_HOME}/Workspace/kubernetes-standalone"
 USER_HOME_ESC=$(echo "${USER_HOME}" | sed 's/\//\\\//g')
 mkdir -p "${USER_HOME}/cron"
 cat cron/crontab | sed "s/\${USER_HOME}/${USER_HOME_ESC}/g" > "${USER_HOME}/cron/crontab"
@@ -125,6 +125,6 @@ echo
 echo "[INFO] the current user session should be terminated, and a new session started. this will update user permissions."
 echo "[INFO] following re-login, the following command should be run to initialize the kubernetes cluster on the instance:"
 echo
-echo "cd ~/Workspace/k8s-standalone"
+echo "cd ~/Workspace/kubernetes-standalone"
 echo "sudo sh kubernetes/kubernetes-init.sh \${USER} \${HOME}"
 echo

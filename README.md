@@ -21,7 +21,7 @@ Ensure that the AWS EC2 instance has an associated VPC and security group exposi
 
 Initialize the EC2 instance by logging in and running:
 
-* `curl https://raw.githubusercontent.com/matthewjohnson42/k8s-standalone/master/server-init.sh -o ~/server-init.sh`
+* `curl https://raw.githubusercontent.com/matthewjohnson42/kubernetes-standalone/master/server-init.sh -o ~/server-init.sh`
 * `sudo sh ~/server-init.sh ${USER} ${HOME}`
 
 To update the instance, run the scripts titled `build-and-deploy.sh` in the subdirectories of the `kubernetes` directory.
