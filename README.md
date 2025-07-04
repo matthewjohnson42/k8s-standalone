@@ -1,4 +1,4 @@
-# k8s-standalone
+# kubernetes-standalone
 
 A repository containing setup scripts and configurations for a single-node Kubernetes cluster using [microk8s](https://microk8s.io/). 
 
